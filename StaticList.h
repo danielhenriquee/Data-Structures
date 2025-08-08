@@ -1,7 +1,7 @@
 // Daniel Henrique da Silva
 
-#ifndef staticList_H_INCLUDED
-#define staticList_H_INCLUDED
+#ifndef STATIC_LIST_H
+#define STATIC_LIST_H
 
 // Generic element T
 template <typename T>
@@ -160,4 +160,4 @@ void quicksort(TList<T, MAX> &list, int low, int high) {
     }
 }
 
-#endif // staticList_H_INCLUDED
+#endif // STATIC_LIST_H
