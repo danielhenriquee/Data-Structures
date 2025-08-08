@@ -117,11 +117,11 @@ bool removeLastL(TListL<T> &list) {
 // Remove first element of the list
 template <typename T>
 bool removeFirstL(TListL<T> &list) {
-    if (list.start != NULL) // Check if list is not empty
+    if (list.start != NULL) { // Check if list is not empty
         TElementL<T>* temp = list.start;
         list.start = list.start->next; // list.start points to second element
-    delete temp;
-    else
+        delete temp;
+    } else
         return false;
     return true;
 }
@@ -129,31 +129,42 @@ bool removeFirstL(TListL<T> &list) {
 // Remove element at chosen position
 template <typename T>
 bool removePosL(TListL<T> &list, int pos) {
-    TElementL<T> *nav = list.start; // Create auxiliar pointer to navigate the list
-    if (list.start != NULL || pos >= 0) { // Check if list is not empty or position invalid (equal or less than 0)
-        int cont = 1;
-        if (pos == 1) { // Check if wants to remove first position
-            list.start = list.start->next; // Start of the list now is the second element
-            return true;
-        }
-        while (nav->next != NULL && cont < pos-1) { // Navigate until position chosed or last position
-            nav = nav->next;
-            cont++;
-        }
-        if (nav->next == NULL) { // Check if navigation did not reach position chosed
-            return false;
-        }
-        nav->next = nav->next->next; // Nav jumps on element and points to the next one
+    // Check if the list is empty or if the position is invalid (must be >= 1)
+    if (list.start == nullptr || pos < 1) {
+        return false;
+    }
+
+    // If removing the first element
+    if (pos == 1) {
+        TElementL<T>* temp = list.start;
+        list.start = list.start->next; // Move start pointer // Start of the list now is the second element
+        delete temp;
         return true;
     }
-    return false;
+
+    // Traverse to the element before the target position
+    TElementL<T>* current = list.start;
+    for (int i = 1; i < pos - 1 && current->next != nullptr; i++) {
+        current = current->next;
+    }
+
+    // If there is no element at the given position
+    if (current->next == nullptr) {
+        return false;
+    }
+
+    // Remove the target element
+    TElementL<T>* temp = current->next;
+    current->next = temp->next;
+    delete temp;
+    return true;
 }
 
 // Delete all elements of the list
 template <typename T>
 void destroyList(TListL<T> &list) {
     TElementL<T>* nav = list.start;
-    while (current) { // Navigate through the list
+    while (nav) { // Navigate through the list
         TElementL<T>* temp = nav;
         nav = nav->next;
         delete temp;
