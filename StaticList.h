@@ -18,13 +18,13 @@ struct TList {
 
 // Boot list
 template <typename T, int MAX>
-void bootStaticList(TList<T, MAX> &list) {
+void bootStaticListS(TList<T, MAX> &list) {
     list.size = 0;
 }
 
 // Insert at the end of the list
 template <typename T, int MAX>
-bool insertLast(TList<T, MAX> &list, T data) {
+bool insertLastS(TList<T, MAX> &list, T data) {
     if (list.size >= MAX) { // Check if list is full
         return false;
     } else {
@@ -38,7 +38,7 @@ bool insertLast(TList<T, MAX> &list, T data) {
 
 // Insert at the beginning of the list
 template <typename T, int MAX>
-bool insertFirst(TList<T, MAX> &list, T data) {
+bool insertFirstS(TList<T, MAX> &list, T data) {
     if (list.size >= MAX) { // Check if list is full
         return false;
     } else {
@@ -56,7 +56,7 @@ bool insertFirst(TList<T, MAX> &list, T data) {
 
 // Insert at a position in the list
 template <typename T, int MAX>
-bool insertPos(TList<T, MAX> &list, T data, int pos) {
+bool insertPosS(TList<T, MAX> &list, T data, int pos) {
     if ((list.size >= MAX) || (pos > list.size) || pos <= 0) { // Check if: list is full; position chosed is greater than list size; position chosed is an invalid number
         return false;
     } else {
@@ -73,7 +73,7 @@ bool insertPos(TList<T, MAX> &list, T data, int pos) {
 
 // Remove last element in the list
 template <typename T, int MAX>
-bool removeLast(TList<T, MAX> &list) {
+bool removeLastS(TList<T, MAX> &list) {
     if (list.size <= 0) // Check if list is empty
         return false;
     else
@@ -83,7 +83,7 @@ bool removeLast(TList<T, MAX> &list) {
 
 // Remove first element in the list
 template <typename T, int MAX>
-bool removeFirst(TList<T, MAX> &list) {
+bool removeFirstS(TList<T, MAX> &list) {
     if (list.size <= 0) { // Check if list is empty
         return false;
     } else {
@@ -97,7 +97,7 @@ bool removeFirst(TList<T, MAX> &list) {
 
 // Remove element at a position in the list
 template <typename T, int MAX>
-bool removePos(TList<T, MAX> &list, int pos) {
+bool removePosS(TList<T, MAX> &list, int pos) {
     if ((list.size <= 0) || (pos >= list.size) || pos <= 0) { // Check if list is empty; position chosed is greater than list size; position chosed is an invalid number
         return false;
     } else {
@@ -119,7 +119,7 @@ void swap(TList<T,MAX> &list, int a, int b) {
 
 // Bubblesort
 template <typename T, int MAX>
-void bubblesort(TList<T, MAX> &list) {
+void bubblesortS(TList<T, MAX> &list) {
     int swapped = 1;
     T temp;
   
@@ -152,7 +152,7 @@ int partition(TList<T, MAX> &list, int low, int high) {
 
 // Quicksort
 template <typename T, int MAX>
-void quicksort(TList<T, MAX> &list, int low, int high) {
+void quicksortS(TList<T, MAX> &list, int low, int high) {
     if (low < high) {
         int pivot = partition(list, low, high); // Determine pivot element and its position
         quicksort(list, low, pivot - 1); // Recursively sort the left part (lower elements than pivot)
