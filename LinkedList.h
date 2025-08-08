@@ -162,7 +162,7 @@ bool removePosL(TListL<T> &list, int pos) {
 
 // Delete all elements of the list
 template <typename T>
-void destroyList(TListL<T> &list) {
+void destroyL(TListL<T> &list) {
     TElementL<T>* nav = list.start;
     while (nav) { // Navigate through the list
         TElementL<T>* temp = nav;
@@ -174,7 +174,7 @@ void destroyList(TListL<T> &list) {
 
 // Check if list is empty
 template <typename T>
-bool isEmpty(const TListL<T> &list) {
+bool isEmptyL(const TListL<T> &list) {
     return list.start == NULL;
 }
 
@@ -210,7 +210,7 @@ void bubblesortL(TListL<T> &list) {
 
 // Return last element of the list
 template <typename T>
-TElementL<T>* lastElement(TElementL<T> *head) {
+TElementL<T>* lastElementL(TElementL<T> *head) {
     while (head != NULL && head->next != NULL)
         head = head->next;
     return head;
@@ -282,7 +282,7 @@ TElementL<T>* quickSortRecurrent(TElementL<T>* head, TElementL<T>* end) {
 
 // Quicksort
 template <typename T>
-void quickSort(TElementL<T>** headRef) { 
+void quickSortL(TElementL<T>** headRef) { 
     (*headRef)= quickSortRecurrent(*headRef, lastElement(*headRef)); 
     return; 
 } 
