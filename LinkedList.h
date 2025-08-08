@@ -1,7 +1,7 @@
 // Daniel Henrique da Silva
 
-#ifndef linkedList_H_INCLUDED
-#define linkedList_H_INCLUDED
+#ifndef LINKED_LIST_H
+#define LINKED_LIST_H
 
 // Generic element type
 template <typename T>
@@ -37,13 +37,13 @@ template <typename T>
 bool insertLastL(TListL<T> &list, T &data) {
     TElementL<T> *newElement = newElementL(data); // Create new element
   
-    if (list.start == NULL) {  // Check if list is empty
+    if (list.start == NULL) { // Check if list is empty
         list.start = newElement; // Insert as first (and last) position
         return true;
     } else {
         TElementL<T> *nav = list.start; // Create auxiliar pointer to navigate the list
         while (nav->next != NULL)
-            nav = nav->next;      // Navigate to the last element in the list
+            nav = nav->next; // Navigate to the last element in the list
         nav->next = newElement; // Insert element at the end of the list
         return true;
     }
@@ -55,12 +55,12 @@ template <typename T>
 bool insertFirstL(TListL<T> &list, T data) {
     TElementL<T> *newElement = newElementL(data); // Create new element
   
-    if (list.start == NULL) {  // Check if list is empty
+    if (list.start == NULL) { // Check if list is empty
         list.start = newElement; // Insert as first position
         return true;
     } else {
         newElement->next = list.start; // Points to list's first element
-        list.start = newElement;       // Became first element of the list
+        list.start = newElement; // Became first element of the list
         return true;
     }
 }
@@ -84,9 +84,9 @@ bool insertPosL(TListL<T> &list, T &data, int pos) {
         if (cont != pos - 1) // Check if navigation did not reach position chosed
             return false;
         newElement->next = nav->next; // New element points to the element the before element was pointing
-        nav->next = newElement;       // Element before points to new element
+        nav->next = newElement; // Element before points to new element
         return true;
-    } else {                   // If list is empty
+    } else { // If list is empty
         list.start = newElement; // Insert as first element
         return true;
     }
@@ -100,13 +100,14 @@ bool removeLastL(TListL<T> &list) {
     } else {
         TElementL<T> *nav = list.start; // Create auxiliar pointer to navigate the list
         if (nav->next == NULL) { // Check if list has only one element
-            list.start = NULL;     // Remove first (and last) element
+            list.start = NULL; // Remove first (and last) element
             delete nav;
             return true;
         } else {
             while (nav->next->next != NULL) {
                 nav = nav->next;
             }
+            delete nav->next;
             nav->next = NULL; // Nav points to NULL, excluding last element (P) off the list
             return true;
         }
@@ -116,8 +117,10 @@ bool removeLastL(TListL<T> &list) {
 // Remove first element of the list
 template <typename T>
 bool removeFirstL(TListL<T> &list) {
-    if (list.start != NULL)            // Check if list is not empty
+    if (list.start != NULL) // Check if list is not empty
+        TElementL<T>* temp = list.start;
         list.start = list.start->next; // list.start points to second element
+    delete temp;
     else
         return false;
     return true;
@@ -127,7 +130,7 @@ bool removeFirstL(TListL<T> &list) {
 template <typename T>
 bool removePosL(TListL<T> &list, int pos) {
     TElementL<T> *nav = list.start; // Create auxiliar pointer to navigate the list
-    if (list.start != NULL or pos >= 0) { // Check if list is not empty or position invalid (equal or less than 0)
+    if (list.start != NULL || pos >= 0) { // Check if list is not empty or position invalid (equal or less than 0)
         int cont = 1;
         if (pos == 1) { // Check if wants to remove first position
             list.start = list.start->next; // Start of the list now is the second element
@@ -146,6 +149,24 @@ bool removePosL(TListL<T> &list, int pos) {
     return false;
 }
 
+// Delete all elements of the list
+template <typename T>
+void destroyList(TListL<T> &list) {
+    TElementL<T>* nav = list.start;
+    while (current) { // Navigate through the list
+        TElementL<T>* temp = nav;
+        nav = nav->next;
+        delete temp;
+    }
+    list.start = NULL;
+}
+
+// Check if list is empty
+template <typename T>
+bool isEmpty(const TListL<T> &list) {
+    return list.start == NULL;
+}
+
 // Swap
 template <typename T>
 void swap(TElementL<T> *a, TElementL<T> *b) {
@@ -157,7 +178,7 @@ void swap(TElementL<T> *a, TElementL<T> *b) {
 // Bubblesort
 template <typename T>
 void bubblesortL(TListL<T> &list) {
-    if (list.start == NULL or list.start->next == NULL) // Nothing to sort
+    if (list.start == NULL || list.start->next == NULL) // Nothing to sort
         return;
   
     int swapped = 1;
@@ -255,4 +276,4 @@ void quickSort(TElementL<T>** headRef) {
     return; 
 } 
 
-#endif // linkedList_H_INCLUDED
+#endif // LINKED_LIST_H
