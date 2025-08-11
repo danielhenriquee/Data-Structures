@@ -134,27 +134,17 @@ bool removePosL(TListL<T> &list, int pos) {
         return false;
     }
 
-    // If removing the first element
-    if (pos == 1) {
-        TElementL<T>* temp = list.start;
-        list.start = list.start->next; // Move start pointer // Start of the list now is the second element
-        delete temp;
-        return true;
-    }
-
     // Traverse to the element before the target position
-    TElementL<T>* current = list.start;
-    for (int i = 1; i < pos - 1 && current->next != nullptr; i++) {
-        current = current->next;
+    TElementL<T> *nav = list.start;
+    for (int i = 1; i < pos - 1 && nav->next; i++) {
+        nav = nav->next;
     }
-
-    // If there is no element at the given position
-    if (current->next == nullptr) {
+    
+    if (!nav->next) // If there is no element at the given position
         return false;
-    }
 
     // Remove the target element
-    TElementL<T>* temp = current->next;
+    TElementL<T>* temp = nav->next;
     current->next = temp->next;
     delete temp;
     return true;
