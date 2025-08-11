@@ -25,7 +25,7 @@ bool bootListL(TListL<T> &list) {
 
 // Create new element
 template <typename T>
-TElementL<T> *newElementL(T &data) {
+TElementL<T> *newElementL(const T &data) {
     TElementL<T> *e = new TElementL<T>;
     e->data = data;
     e->next = nullptr;
@@ -34,7 +34,7 @@ TElementL<T> *newElementL(T &data) {
 
 // Insert at the end of the list
 template <typename T>
-bool insertLastL(TListL<T> &list, T &data) {
+bool insertLastL(TListL<T> &list, const T &data) {
     TElementL<T> *e = newElementL(data); // Create new element
   
     if (list.start == nullptr) { // Check if list is empty
@@ -52,7 +52,7 @@ bool insertLastL(TListL<T> &list, T &data) {
   
 // Insert at the beginning of the list
 template <typename T>
-bool insertFirstL(TListL<T> &list, T data) {
+bool insertFirstL(TListL<T> &list, const T &data) {
     TElementL<T> *e = newElementL(data); // Create new element
   
     if (list.start == nullptr) { // Check if list is empty
@@ -67,8 +67,8 @@ bool insertFirstL(TListL<T> &list, T data) {
 
 // Insert at chosen position
 template <typename T>
-bool insertPosL(TListL<T> &list, T &data, int pos) {
-    if (pos < 0) { // Check if position is valid (negative positions are not valid)
+bool insertPosL(TListL<T> &list, const T &data, int pos) {
+    if (pos <= 0) { // Check if position is valid (negative positions are not valid)
         return false;
     }
   
@@ -192,16 +192,16 @@ void bubblesortL(TListL<T> &list) {
     if (list.start == nullptr || list.start->next == nullptr) // Nothing to sort
         return;
   
-    int swapped = 1;
+    bool swapped = true;
     TElementL<T> *nav = list.start; // Create auxiliar pointer to navigate the list
   
-    while (swapped == 1) {
-        swapped = 0;
+    while (swapped) {
+        swapped = false;
         nav = list.start; // Reset nav to the beginning of the list for each loop
         while (nav->next != nullptr) {
             if (nav->data > nav->next->data) { // Check if previous element is greater than next element
                 swapL(nav,nav->next); // Swap positions
-                swapped = 1;
+                swapped = true;
             }
             nav = nav->next;
         }
@@ -283,7 +283,7 @@ TElementL<T>* quickSortRecurrentL(TElementL<T>* head, TElementL<T>* end) {
 // Quicksort
 template <typename T>
 void quickSortL(TElementL<T>** headRef) { 
-    (*headRef)= quickSortRecurrentL(*headRef, lastElement(*headRef)); 
+    (*headRef)= quickSortRecurrentL(*headRef, lastElementL(*headRef)); 
     return; 
 } 
 
