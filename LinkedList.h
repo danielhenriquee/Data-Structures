@@ -26,25 +26,25 @@ bool bootListL(TListL<T> &list) {
 // Create new element
 template <typename T>
 TElementL<T> *newElementL(T &data) {
-    TElementL<T> *newElement = new TElementL<T>;
-    newElement->data = data;
-    newElement->next = nullptr;
-    return newElement;
+    TElementL<T> *e = new TElementL<T>;
+    e->data = data;
+    e->next = nullptr;
+    return e;
 }
 
 // Insert at the end of the list
 template <typename T>
 bool insertLastL(TListL<T> &list, T &data) {
-    TElementL<T> *newElement = newElementL(data); // Create new element
+    TElementL<T> *e = newElementL(data); // Create new element
   
     if (list.start == nullptr) { // Check if list is empty
-        list.start = newElement; // Insert as first (and last) position
+        list.start = e; // Insert as first (and last) position
         return true;
     } else {
         TElementL<T> *nav = list.start; // Create auxiliar pointer to navigate the list
         while (nav->next != nullptr)
             nav = nav->next; // Navigate to the last element in the list
-        nav->next = newElement; // Insert element at the end of the list
+        nav->next = e; // Insert element at the end of the list
         return true;
     }
     return false;
@@ -53,14 +53,14 @@ bool insertLastL(TListL<T> &list, T &data) {
 // Insert at the beginning of the list
 template <typename T>
 bool insertFirstL(TListL<T> &list, T data) {
-    TElementL<T> *newElement = newElementL(data); // Create new element
+    TElementL<T> *e = newElementL(data); // Create new element
   
     if (list.start == nullptr) { // Check if list is empty
-        list.start = newElement; // Insert as first position
+        list.start = e; // Insert as first position
         return true;
     } else {
-        newElement->next = list.start; // Points to list's first element
-        list.start = newElement; // Became first element of the list
+        e->next = list.start; // Points to list's first element
+        list.start = e; // Became first element of the list
         return true;
     }
 }
@@ -72,7 +72,7 @@ bool insertPosL(TListL<T> &list, T &data, int pos) {
         return false;
     }
   
-    TElementL<T> *newElement = newElementL(data); // Create new element
+    TElementL<T> *e = newElementL(data); // Create new element
   
     if (list.start != nullptr) { // Check if list is not empty
         TElementL<T> *nav = list.start; // Create auxiliar pointer to navigate the list
@@ -83,11 +83,11 @@ bool insertPosL(TListL<T> &list, T &data, int pos) {
         }
         if (cont != pos - 1) // Check if navigation did not reach position chosed
             return false;
-        newElement->next = nav->next; // New element points to the element the before element was pointing
-        nav->next = newElement; // Element before points to new element
+        e->next = nav->next; // New element points to the element the before element was pointing
+        nav->next = e; // Element before points to new element
         return true;
     } else { // If list is empty
-        list.start = newElement; // Insert as first element
+        list.start = e; // Insert as first element
         return true;
     }
 }
@@ -130,7 +130,7 @@ bool removeFirstL(TListL<T> &list) {
 template <typename T>
 bool removePosL(TListL<T> &list, int pos) {
     // Check if the list is empty or if the position is invalid (must be >= 1)
-    if (list.start == nullptrptr || pos < 1) {
+    if (list.start == nullptr || pos < 1) {
         return false;
     }
 
@@ -144,12 +144,12 @@ bool removePosL(TListL<T> &list, int pos) {
 
     // Traverse to the element before the target position
     TElementL<T>* current = list.start;
-    for (int i = 1; i < pos - 1 && current->next != nullptrptr; i++) {
+    for (int i = 1; i < pos - 1 && current->next != nullptr; i++) {
         current = current->next;
     }
 
     // If there is no element at the given position
-    if (current->next == nullptrptr) {
+    if (current->next == nullptr) {
         return false;
     }
 
@@ -180,7 +180,7 @@ bool isEmptyL(const TListL<T> &list) {
 
 // Swap
 template <typename T>
-void swap(TElementL<T> *a, TElementL<T> *b) {
+void swapL(TElementL<T> *a, TElementL<T> *b) {
     T temp = a->data;
     a->data = b->data;
     b->data = temp;
@@ -200,7 +200,7 @@ void bubblesortL(TListL<T> &list) {
         nav = list.start; // Reset nav to the beginning of the list for each loop
         while (nav->next != nullptr) {
             if (nav->data > nav->next->data) { // Check if previous element is greater than next element
-                swap(nav,nav->next); // Swap positions
+                swapL(nav,nav->next); // Swap positions
                 swapped = 1;
             }
             nav = nav->next;
@@ -218,7 +218,7 @@ TElementL<T>* lastElementL(TElementL<T> *head) {
 
 // Quicksort's partition
 template <typename T>
-TElementL<T>* partition(TElementL<T> *head, TElementL<T>* end, TElementL<T>** newHead, TElementL<T>** newEnd) { 
+TElementL<T>* partitionL(TElementL<T> *head, TElementL<T>* end, TElementL<T>** newHead, TElementL<T>** newEnd) { 
     TElementL<T>* pivot = end; 
     TElementL<T> *prev = nullptr, *current = head, *tail = pivot; 
   
@@ -249,14 +249,14 @@ TElementL<T>* partition(TElementL<T> *head, TElementL<T>* end, TElementL<T>** ne
 
 // Quicksort recurrent
 template <typename T>
-TElementL<T>* quickSortRecurrent(TElementL<T>* head, TElementL<T>* end) { 
+TElementL<T>* quickSortRecurrentL(TElementL<T>* head, TElementL<T>* end) { 
     if (!head || head == end) // Base condition 
         return head; 
 
     TElementL<T> *newHead = nullptr, *newEnd = nullptr; 
 
     // Partition the list, newHead and newEnd will be updated by the partition function 
-    TElementL<T>* pivot = partition(head, end, &newHead, &newEnd); 
+    TElementL<T>* pivot = partitionL(head, end, &newHead, &newEnd); 
 
     // If pivot is the smallest element - no need to recurrent for the left part. 
     if (newHead != pivot) { 
@@ -267,15 +267,15 @@ TElementL<T>* quickSortRecurrent(TElementL<T>* head, TElementL<T>* end) {
         tmp->next = nullptr; 
 
         // Recurrent for the list before pivot 
-        newHead = quickSortRecurrent(newHead, tmp); 
+        newHead = quickSortRecurrentL(newHead, tmp); 
 
         // Change next of last node of the left half to pivot 
-        tmp = lastElement(newHead); 
+        tmp = lastElementL(newHead); 
         tmp->next = pivot; 
     } 
 
     // Recurrent for the list after the pivot element 
-    pivot->next = quickSortRecurrent(pivot->next, newEnd); 
+    pivot->next = quickSortRecurrentL(pivot->next, newEnd); 
 
     return newHead; 
 } 
@@ -283,7 +283,7 @@ TElementL<T>* quickSortRecurrent(TElementL<T>* head, TElementL<T>* end) {
 // Quicksort
 template <typename T>
 void quickSortL(TElementL<T>** headRef) { 
-    (*headRef)= quickSortRecurrent(*headRef, lastElement(*headRef)); 
+    (*headRef)= quickSortRecurrentL(*headRef, lastElement(*headRef)); 
     return; 
 } 
 
