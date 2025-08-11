@@ -145,7 +145,7 @@ bool removePosL(TListL<T> &list, int pos) {
 
     // Remove the target element
     TElementL<T>* temp = nav->next;
-    current->next = temp->next;
+    nav->next = temp->next;
     delete temp;
     return true;
 }
