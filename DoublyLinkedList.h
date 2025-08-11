@@ -172,7 +172,7 @@ bool removePosDL(TListDL<T> &list, int pos) {
     TElementDL<T> *nav = list.start; // Create auxiliar pointer to navigate the list
     int cont = 1;
     // Navigate until chosen position or last element of the list
-    while (cont < pos && nav != nullptr) {
+    while (cont < pos && nav) {
         nav = nav->next;
         cont++;
     }
