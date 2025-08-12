@@ -60,4 +60,15 @@ bool LinkedQ_isEmpty(const LinkedQ_TList<T> &list) {
     return list.first == nullptr;
 }
 
+// Delete all elements of the queue
+template <typename T>
+void LinkedQ_destroyQueue(LinkedQ_TList<T> &list) {
+    while (list.first != nullptr) {
+        LinkedQ_TElement<T> *temp = list.first;
+        list.first = list.first->next;
+        delete temp;
+    }
+    list.first = nullptr; // Safety reset
+}
+
 #endif // LINKED_QUEUE_H
