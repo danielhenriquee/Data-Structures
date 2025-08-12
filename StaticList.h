@@ -18,7 +18,7 @@ struct TList {
 
 // Boot list
 template <typename T, int MAX>
-void bootStaticListS(TList<T, MAX> &list) {
+void bootStaticList(TList<T, MAX> &list) {
     list.size = 0;
 }
 
