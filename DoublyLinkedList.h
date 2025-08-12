@@ -44,13 +44,11 @@ bool insertLastDL(TListDL<T> &list, const T &data) {
         list.start = e;
         list.end = e;
         return true;
-    } else {
-        list.end->next = e; // Last element of the list points to new element
-        e->prev = list.end; // New element's prev points to last element of the list
-        list.end = e; // New element became the last element of the lis
-        return true;
     }
-    return false;
+    list.end->next = e; // Last element of the list points to new element
+    e->prev = list.end; // New element's prev points to last element of the list
+    list.end = e; // New element became the last element of the lis
+    return true;
 }
 
 // Insert at the beginning of the list
@@ -62,53 +60,35 @@ bool insertFirstDL(TListDL<T> &list, const T &data) {
         list.start = e;
         list.end = e;
         return true;
-    } else {
-        e->next = list.start; // Points to first element of the list
-        list.start->prev = e; // First element's prev points to new element
-        list.start = e; // New element became first element of the list
-        return true;
     }
-    return false;
+    e->next = list.start; // Points to first element of the list
+    list.start->prev = e; // First element's prev points to new element
+    list.start = e; // New element became first element of the list
+    return true;
 }
 
 // Insert at chosen position in the list
 template <typename T>
 bool insertPosDL(TListDL<T> &list, const T &data, int pos) {
-    if (pos <= 0) // Check if position is valid (negative positions are not valid)
+    if (pos < 0) // Check if position is valid (negative positions are not valid)
         return false;
 
-    TElementDL<T> *e = newElementDL(data);
-
-    if (list.start == nullptr) { // If list is empty
-        if (pos == 1) { // Insert only if pos == 1
-            list.start = e;
-            list.end = e;
-            return true;
-        } else {
-            delete e;
-            return false; // Invalid position
-        }
-    }
-
-    if (pos == 1) { // If inserting at first position
-        e->next = list.start;
-        list.start->prev = e;
-        list.start = e; // New element became first element of the list
-        return true;
+    if (list.start == nullptr || pos == 0) { // If list is empty or pos = 0
+        return insertFirstDL(list, data);
     }
 
     TElementDL<T> *nav = list.start; // Create auxiliar pointer to navigate the list
-    int cont = 1;
-    while (cont < pos-1 && nav->next != nullptr) { // Navigate until chosen position or last element of the list
+    int i = 0;
+    while (i < pos-1 && nav->next != nullptr) { // Navigate until chosen position or last element of the list
         nav = nav->next;
-        cont++;
+        i++;
     }
 
-    if (cont != pos-1) { // Invalid position
-        delete e;
+    if (i != pos-1) { // Invalid position
         return false;
     }
 
+    TElementDL<T> *e = newElementDL(data);
     e->prev = nav;
     e->next = nav->next;
 
@@ -127,74 +107,61 @@ template <typename T>
 bool removeLastDL(TListDL<T> &list) {
     if (list.start == nullptr) // Check if list is empty
         return false;
-    else {
-        TElementDL<T>* temp = list.end;
-        if (list.start->next == nullptr) { // Just one element in the list
-            list.start = nullptr;
-            list.end = nullptr;
-        } else {
-            list.end = list.end->prev; // Penultimate element of the list became last element
-            list.end->next = nullptr; // Last element's next points to nullptr
-            
-        }
-        delete temp;
-        return true; 
+    
+    TElementDL<T>* temp = list.end;
+    if (list.start->next == nullptr) { // Just one element in the list
+        list.start = nullptr;
+        list.end = nullptr;
+    } else {
+        list.end = list.end->prev; // Penultimate element of the list became last element
+        list.end->next = nullptr; // Last element's next points to nullptr
     }
-    return false;
+    delete temp;
+    return true; 
 }
 
 // Remove first element of the list
 template <typename T>
 bool removeFirstDL(TListDL<T> &list) {
-    if (list.start == nullptr) {// Check if list is empty
+    if (list.start == nullptr) { // Check if list is empty
         return false;
+    } 
+    TElementDL<T>* temp = list.start;
+    if (list.start->next == nullptr) { // If there is only one element in the list
+        list.start = nullptr;
+        list.end = nullptr;
     } else {
-        TElementDL<T>* temp = list.start;
-        if (list.start->next == nullptr) { // If there is only one element in the list
-            list.start = nullptr;
-            list.end = nullptr;
-        } else {
-            list.start = list.start->next; // Start of the list now is the second element
-            list.start->prev = nullptr;
-        }
-        delete temp;
-        return true;
+        list.start = list.start->next; // Start of the list now is the second element
+        list.start->prev = nullptr;
     }
-        return false;
+    delete temp;
+    return true;
 }
 
 // Remove element at chosen position
 template <typename T>
 bool removePosDL(TListDL<T> &list, int pos) {
-    if (pos <= 0 || list.start == nullptr) // Check if: position is valid (negative positions are not valid) || list is empty
+    if (pos < 0 || list.start == nullptr) // Check if: position is valid (negative positions are not valid) || list is empty
         return false;
 
-    TElementDL<T> *nav = list.start; // Create auxiliar pointer to navigate the list
-    int cont = 1;
+    TElementDL<T> *nav = list.start; // Create auxiliary pointer to navigate the list
+    int i = 0;
     // Navigate until chosen position or last element of the list
-    while (cont < pos && nav) {
+    while (i < pos && nav) {
         nav = nav->next;
-        cont++;
+        i++;
     }
 
     if (nav == nullptr) // Invalid position
         return false;
 
-    // If there is only one element in the list
-    if (list.start == list.end && pos == 1) {
-        delete nav;
-        list.start = nullptr;
-        list.end = nullptr;
-        return true;
-    }
-
-    // If removing first elemente
+    // If removing first element
     if (nav == list.start) {
-        list.start = nav->next; // Second element became start of the list
+        list.start = nav->next; // Second element becomes start of the list
         if (list.start != nullptr)
             list.start->prev = nullptr;
         else
-            list.end = nullptr;
+            list.end = nullptr; // List became empty
         delete nav;
         return true;
     }
@@ -221,6 +188,8 @@ bool removePosDL(TListDL<T> &list, int pos) {
 // Swap
 template <typename T>
 void swapDL(TElementDL<T> *a, TElementDL<T> *b) {
+    if (!a || !b) 
+        return;
     T temp = a->data;
     a->data = b->data;
     b->data = temp;
@@ -232,7 +201,7 @@ void bubblesortDL(TListDL<T> &list) {
     if (list.start == nullptr || list.start->next == nullptr) // Nothing to sort
         return;
     bool swapped = true;
-    TElementDL<T> *nav = list.start; // Create auxiliar pointer to navigate the list
+    TElementDL<T> *nav = list.start; // Create auxiliary pointer to navigate the list
     while (swapped) {
         swapped = false;
         nav = list.start; // Reset nav to the beginning of the list for each loop
