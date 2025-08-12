@@ -18,7 +18,7 @@ struct TListL {
 
 // Boot list
 template <typename T>
-bool bootListL(TListL<T> &list) {
+bool bootLinkedList(TListL<T> &list) {
     list.start = nullptr;
     return true;
 }
