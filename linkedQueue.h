@@ -23,7 +23,7 @@ bool bootLinkedQueue(TListQ<T> &list) {
 
 // Insert at the end of the queue
 template <typename T>
-bool queue(TListQ<T> &list, T &data) {
+bool queueL(TListQ<T> &list, T &data) {
     TElementQ<T> *e = new TElementQ<T>;
     e->data = data;
     e->next = nullptr;
@@ -42,7 +42,7 @@ bool queue(TListQ<T> &list, T &data) {
 
 // Remove first element in the queue
 template <typename T>
-T dequeue(TListQ<T> &list) {
+T dequeueL(TListQ<T> &list) {
   if (list.first == nullptr) // Check if queue is empty
       return false;
   
@@ -52,7 +52,7 @@ T dequeue(TListQ<T> &list) {
 }
 
 template <typename T>
-bool isEmpty(const TListQ<T> &list) {
+bool isEmptyL(const TListQ<T> &list) {
     return list.first == nullptr;
 }
 
