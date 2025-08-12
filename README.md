@@ -1,4 +1,4 @@
-**# Abstract-Data-Type-ADT**
+# Abstract-Data-Type-ADT
 Abstract Data Type (ADT) created for Data Structures - 2024/1
 
 This repository contains generic (template-based) implementations of fundamental data structures, including both static and dynamic versions (singly and doubly linked) of lists, stacks, and queues.
