@@ -26,7 +26,7 @@ void StaticQ_boot(StaticQ_TList<T, MAX> &list) {
 template <typename T, int MAX>
 bool StaticQ_enqueue(StaticQ_TList<T, MAX> &list, const T &data) {
     if (list.size >= MAX) // Check if list is full
-        throw std::underflow_error("Error: queue is full.");
+        throw std::overflow_error("Error: queue is full.");
     
     StaticQ_TElement<T> e;
     e.data = data;
