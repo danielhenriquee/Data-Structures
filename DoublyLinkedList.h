@@ -20,7 +20,7 @@ struct TListDL {
 
 // Boot list
 template <typename T>
-bool bootListDL(TListDL<T> &list) {
+bool bootDoublyLinkedList(TListDL<T> &list) {
     list.start = nullptr;
     list.end = nullptr;
     return true;
