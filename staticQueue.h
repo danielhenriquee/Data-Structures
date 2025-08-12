@@ -24,9 +24,9 @@ void StaticQ_boot(StaticQ_TList<T, MAX> &list) {
 
 // Insert at the end of the queue
 template <typename T, int MAX>
-bool StaticQ_enqueue(StaticQ_TList<T, MAX> &list, T data) {
+bool StaticQ_enqueue(StaticQ_TList<T, MAX> &list, const T &data) {
     if (list.size >= MAX) // Check if list is full
-        throw std::underflow_error("Error: empty queue.");
+        throw std::underflow_error("Error: queue is full.");
     
     StaticQ_TElement<T> e;
     e.data = data;
@@ -39,7 +39,7 @@ bool StaticQ_enqueue(StaticQ_TList<T, MAX> &list, T data) {
 template <typename T, int MAX>
 T StaticQ_dequeue(StaticQ_TList<T, MAX> &list) {
     if (list.size == 0) // Check if queue is empty
-        return false;
+        throw std::underflow_error("Error: empty queue.");
   
     T data = list.elements[0].data; // Save data of the first element
     for (int i = 0; i < list.size - 1; i++)
@@ -48,4 +48,18 @@ T StaticQ_dequeue(StaticQ_TList<T, MAX> &list) {
     return data; // Return data from first element
 }
 
+template <typename T, int MAX>
+bool StaticQ_isEmpty(const StaticQ_TList<T, MAX> &list) {
+    return list.size == 0;
+}
+
+template <typename T, int MAX>
+bool StaticQ_isFull(const StaticQ_TList<T, MAX> &list) {
+    return list.size == MAX;
+}
+
+template <typename T, int MAX>
+void StaticQ_destroyQueue(StaticQ_TList<T, MAX> &list) {
+    list.size = 0;
+}
 #endif // STATIC_QUEUE_H
