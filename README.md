@@ -24,6 +24,7 @@ The main goal is to serve as educational material and a base library for academi
 - Clean, modular, and well-organized code for easy understanding and reuse
 
 **Usage**
+
 These header files can be directly included in C++ projects requiring generic data structures, with support for custom data types. The functions are implemented to offer robustness and efficiency in academic scenarios.
 
 **Notes**
