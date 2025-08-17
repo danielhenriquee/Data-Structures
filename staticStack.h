@@ -28,11 +28,7 @@ bool StaticS_push(StaticS_TList<T, MAX> &list, const T &data) {
     if (list.size >= MAX) // Check if stack is full
         throw std::overflow_error("Error: stack if full.");
 
-    for (int i = list.size; i > 0; i--)
-        list.elements[i] = list.elements[i - 1]; // Shift elements to right
-    StaticS_TElement<T> e;
-    e.data = data;
-    list.elements[0] = e; // Insert new element at top position
+    list.elements[list.size].data = data; // Insert at the top
     list.size++; // Increase stack size
     return true;
 }
@@ -43,11 +39,8 @@ T StaticS_pop(StaticS_TList<T, MAX> &list) {
     if (list.size <= 0) // Check if list is empty
         throw std::underflow_error("Error: empty stack.");
   
-    T data = list.elements[0].data; // Save data of the top element
-    for (int i = 0; i < list.size - 1; i++)
-        list.elements[i] = list.elements[i + 1]; // Shift elements to left
-    list.size--;
-    return data; // Return data from top element
+    list.size--; // Decrease size
+    return list.elements[list.size].data; // Return top element
 }
 
 // Check if the stack is empty
