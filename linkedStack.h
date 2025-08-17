@@ -48,13 +48,13 @@ T LinkedS_pop(LinkedS_TList<T> &list) {
 
 // Check if stack is empty
 template <typename T>
-bool LinkedS_isEmpty(LinkedS_TList<T> &list) {
+bool LinkedS_isEmpty(const LinkedS_TList<T> &list) {
     return list.top == nullptr;
 }
 
 // Delete all elements of the stack
 template <typename T>
-void LinkedS_destroyStack(const LinkedS_TList<T> &list) {
+void LinkedS_destroyStack(LinkedS_TList<T> &list) {
     while (list.top != nullptr) {
         LinkedS_TElement<T> *temp = list.top;
         list.top = list.top->next;
