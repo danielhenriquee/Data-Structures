@@ -28,9 +28,7 @@ bool StaticQ_enqueue(StaticQ_TList<T, MAX> &list, const T &data) {
     if (list.size >= MAX) // Check if list is full
         throw std::overflow_error("Error: queue is full.");
     
-    StaticQ_TElement<T> e;
-    e.data = data;
-    list.elements[list.size] = e; // Insert element at last position
+    list.elements[list.size].data = data; // Insert element at last position
     list.size++; // Increase queue size
     return true;
 }
