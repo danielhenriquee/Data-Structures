@@ -165,7 +165,6 @@ void LinkedL_destroyList(LinkedL_TList<T> &list) {
         delete temp;
     }
     list.start = nullptr;
-    list.end = nullptr;
 }
 
 // Check if list is empty
