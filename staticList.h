@@ -28,9 +28,8 @@ bool StaticL_insertLast(StaticL_TList<T, MAX> &list, const T &data) {
     if (list.size >= MAX) { // Check if list is full
         return false;
     }
-    StaticL_TElement<T> e;
-    e.data = data;
-    list.elements[list.size] = e; // Insert element at last position
+
+    list.elements[list.size].data = data; // Insert element at last position
     list.size++; // Increase list size
     return true;
 }
@@ -45,9 +44,7 @@ bool StaticL_insertFirst(StaticL_TList<T, MAX> &list, const T &data) {
     for (int i = list.size; i > 0; i--)
         list.elements[i] = list.elements[i - 1]; // Pull all elements one spot to the right
   
-    StaticL_TElement<T> e;
-    e.data = data;
-    list.elements[0] = e; // Insert element at first position
+    list.elements[0].data = data; // Insert element at first position
     list.size++; // Increase list size
     return true;
 }
@@ -61,9 +58,7 @@ bool StaticL_insertPos(StaticL_TList<T, MAX> &list, const T &data, int pos) {
     for (int i = list.size; i > pos; i--)
         list.elements[i] = list.elements[i - 1]; // Pull all elements (starting from chosen position) one cell to the right
     
-    StaticL_TElement<T> e;
-    e.data = data;
-    list.elements[pos] = e; // Insert element at chosen position
+    list.elements[pos].data = data; // Insert element at chosen position
     list.size++; // Increase list size
     return true;
 }
@@ -108,22 +103,22 @@ void StaticL_swap(StaticL_TList<T,MAX> &list, int a, int b) {
     if (a < 0 || a >= list.size || b < 0 || b >= list.size || a == b)
         return;
     T temp = list.elements[a].data;
-    list.elements[a].data = list.elements[b].data;;
+    list.elements[a].data = list.elements[b].data;
     list.elements[b].data = temp;
 }
 
 // Bubblesort
 template <typename T, int MAX>
 void StaticL_bubblesort(StaticL_TList<T, MAX> &list) {
-    int swapped = 1;
+    bool swapped = true;
     T temp;
   
-    for (int i = list.size - 1; (i >= 1) && (swapped == 1); i--) {
-        swapped = 0;
+    for (int i = list.size - 1; (i >= 1) && (swapped); i--) {
+        swapped = false;
         for (int j = 0; j < i; j++) {
             if (list.elements[j].data > list.elements[j + 1].data) { // Check if previous element is greater than next element
                 StaticL_swap(list, j, j + 1); // Swap positions
-                swapped = 1;
+                swapped = true;
             }
         }
     }
