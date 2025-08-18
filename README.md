@@ -1,7 +1,7 @@
-# Abstract-Data-Type-ADT
-Abstract Data Type (ADT) created for Data Structures - 2024/1
+# Data Structures
+Data Structures developed for educational purposes - 2024/1
 
-This repository contains generic (template-based) implementations of fundamental data structures, including both static and dynamic versions (singly and doubly linked) of lists, stacks, and queues.
+This repository contains generic (template-based) implementations of fundamental data structures.
 The main goal is to serve as educational material and a base library for academic projects, facilitating practical study and application of ADT concepts.
 
 **Contents**
@@ -14,6 +14,7 @@ The main goal is to serve as educational material and a base library for academi
 - staticStack.h
 - linkedStack.h
 - doublyLinkedStack.h
+- avlTree.h
   
 **Features**
 - Generic implementations for different data types
