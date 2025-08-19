@@ -1,0 +1,53 @@
+// struct Thash{
+//   int chave;
+//   char ocupado;     
+// }
+
+// void inicializaHash(Thash tabela[]){
+//   for(int i = 0; i < tam; i++){
+//     tabela[i] = NULL;
+//   }
+// }
+
+// void inserir (Thash tabela[],int n){
+//   int i = 0;
+//   int pos = funcao_hashing[n];
+//   while(i < tam && tabela[pos].livre == 'O'){
+//    
+//     pos = funcao_hashing(n+1);
+//      i++;
+//   }
+//   if(i < tam) {
+//     tabela[pos].chave = n;
+//     tabela[pos].livre = 'O';
+//   }
+//   else{
+//     cout << "\ntabela Cheia"
+//   }
+// }
+
+// int buscar (Thash tabela[],int n){
+//   int i = 0;
+//   int pos = funcao_hashing(n);
+//   while(i < tam && tabela[pos].livre != 'L' && tabela[pos].chave != n){
+//     i++;
+//     pos = funcao_hashing(n+1);
+//   }
+//   if(i < tam && tabela[pos].chave == n){
+//     return pos;
+//   }
+//   else {
+//     return tam;
+//   }
+// }
+
+// void remover (Thash tabela[],int n){
+//   int posicao = buscar(tabela,n);
+
+//   if(posicao < tam){
+//     tabela[posicao].livre = 'R';
+//   }
+//   else{
+//     cout << "\nChave nao encontrada";
+//   }
+// }
