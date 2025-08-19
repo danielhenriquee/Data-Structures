@@ -13,7 +13,6 @@ This folder contains template-based Abstract Data Types (ADTs) for different kin
 
   Cons: limited capacity.
 
-
 - Linked List (linkedList.h)
 
   Dynamically allocated nodes connected with pointers.
@@ -29,7 +28,6 @@ This folder contains template-based Abstract Data Types (ADTs) for different kin
   Pros: efficient traversals and removals in both directions.
 
   Cons: higher memory overhead.
-
 
 **Features**
 - Generic implementation with C++ templates
