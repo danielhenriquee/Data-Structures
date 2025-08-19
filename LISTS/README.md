@@ -6,28 +6,19 @@ This folder contains template-based Abstract Data Types (ADTs) for different kin
 
 **Contents**
 - Static List (staticList.h)
-
-  Fixed-size array implementation.
-
-  Pros: simple, fast indexing.
-
-  Cons: limited capacity.
+  - Fixed-size array implementation
+  - Pros: simple, fast indexing
+  - Cons: limited capacity
 
 - Linked List (linkedList.h)
-
-  Dynamically allocated nodes connected with pointers.
-
-  Pros: no fixed limit, flexible insertions/removals.
-
-  Cons: sequential access only.
+  - Dynamically allocated nodes connected with pointers
+  - Pros: no fixed limit, flexible insertions/removals
+  - Cons: sequential access only
 
 - Doubly Linked List (doublyLinkedList.h)
-
-  Nodes connected in both directions.
-
-  Pros: efficient traversals and removals in both directions.
-
-  Cons: higher memory overhead.
+  - Nodes connected in both directions
+  - Pros: efficient traversals and removals in both directions
+  - Cons: higher memory overhead
 
 **Features**
 - Generic implementation with C++ templates
