@@ -1,26 +1,31 @@
 # Data Structures
 Data Structures developed for educational purposes - 2024/1
 
-This repository contains generic (template-based) implementations of fundamental data structures.
+This repository contains generic (template-based) implementations of fundamental data structures in C++.
+Each type of data structure is organized into its own folder.
 The main goal is to serve as educational material and a base library for academic projects, facilitating practical study and application of ADT concepts.
 
 **Contents**
-- staticList.h
-- linkedList.h
-- doublyLinkedList.h
-- staticQueue.h
-- linkedQueue.h
-- doublyLinkedQueue.h
-- staticStack.h
-- linkedStack.h
-- doublyLinkedStack.h
-- avlTree.h
+- Lists
+  - staticList.h
+  - linkedList.h
+  - doublyLinkedList.h
+- Queues
+  - staticQueue.h
+  - linkedQueue.h
+  - doublyLinkedQueue.h
+- Stacks
+  - staticStack.h
+  - linkedStack.h
+  - doublyLinkedStack.h
+- Trees
+  - avlTree.h
   
 **Features**
-- Generic implementations for different data types
-- Exception handling for error control (e.g., underflow, overflow)
-- Static structures with fixed size and dynamic ones with dynamic memory allocation
-- Standard methods: insertion, removal, state checks (empty, full), destruction
+- Generic implementations with templates (support for different data types)
+- Exception handling for error control (underflow, overflow, invalid access)
+- Static (fixed-size) and dynamic (pointer-based) versions
+- Standard operations: insertion, removal, state checks (empty, full), destruction
 - Sorting algorithms (bubble sort and quicksort) implemented for static and dynamic lists
 - Clean, modular, and well-organized code for easy understanding and reuse
 
