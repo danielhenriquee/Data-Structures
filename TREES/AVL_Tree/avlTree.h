@@ -13,7 +13,7 @@ template <typename T>
 struct AVL_TBinaryNode {
     T data;
     int key;
-    int balance; // Balance factor = height(left) - height(right)
+    int height;
     AVL_TBinaryNode<T> *right; // Points to right child
     AVL_TBinaryNode<T> *left; // Points to left child
 };
@@ -32,123 +32,101 @@ void AVL_boot(AVL_TBinaryTree<T> &tree) {
 
 // Returns AVL tree height
 template <typename T>
-int height(AVL_TBinaryNode<T>* node) {
-    if (!node) // If nullptr
+int AVL_height(AVL_TBinaryNode<T> *node) {
+    if (node == nullptr) {
         return 0;
-    int hl = height(node->left); 
-    int hr = height(node->right);
-    if (hl > hr) // If left height is greater
-        return hl + 1;
-    else // If right height is greater or equal
-        return hr + 1;
+    } else {
+        return node->height;
+    }
+
 }
 
-// Update node's balance factor
+// Returns balance factor
 template <typename T>
-void AVL_updateBalanceFactor (AVL_TBinaryNode<T>* node) {
-    if (!node) // If nullptr
-        return;
-    int hl = height(node->left); // Calculates left subtree height
-    int hr = height(node->right); // Calculates right subtree height
-    node->balance = hl - hr; // Balance factor = left height - right height 
+int AVL_getBalance(AVL_TBinaryNode<T> *node) {
+    if (!node) 
+        return 0;
+    return AVL_height(node->left) - AVL_height(node->right);
+}
+
+// Update node height
+template <typename T>
+void AVL_updateHeight(AVL_TBinaryNode<T> *node) {
+    if (node)
+        node->height = 1 + max(AVL_height(node->left), AVL_height(node->right));
+}
+
+// Create new node with default attributes
+template <typename T>
+AVL_TBinaryNode<T>* AVL_newNode(int key, T data) {
+    AVL_TBinaryNode<T>* node = new AVL_TBinaryNode<T>;
+    node->key = key;
+    node->data = data;
+    node->height = 1;
+    node->left = node->right = nullptr;
+    return node;
 }
 
 // Balance case: Left-Left
 template <typename T>
 void LL (AVL_TBinaryNode<T> *&r) {
-    AVL_TBinaryNode<T> *b = r; // B became sub-tree's root
-    AVL_TBinaryNode<T> *a = b->left; // A became left side of sub-tree's root
-    b->left = a->right; // Root->left points a->right
-    a->right = b; // a->right points to root
-    r = a;
-    AVL_updateBalanceFactor(a);
-    AVL_updateBalanceFactor(b);
+    AVL_TBinaryNode<T>* A = r->left; // A becomes left side of sub-tree's root
+    r->left = A->right; // Root->left points to A->right
+    A->right = r; // A->right points to root
+    r = A;
+
+    AVL_updateHeight(r->right);
+    AVL_updateHeight(r);
 }
 
 // Balance case: Right-Right
 template <typename T>
 void RR (AVL_TBinaryNode<T> *&r) {
-    AVL_TBinaryNode<T> *b = r; // B became sub-tree's root
-    AVL_TBinaryNode<T> *a = b->right; // A became right side of sub-tree's root
-    b->right = a->left; // Root->right points a->left
-    a->left = b; // a->right points to root
-    r = a;
-    AVL_updateBalanceFactor(a);
-    AVL_updateBalanceFactor(b);
+    AVL_TBinaryNode<T>* A = r->right; // A becomes right side of sub-tree's root
+    r->right = A->left; // Root->right points to A->left
+    A->left = r; // A->left points to root
+    r = A;
+
+    AVL_updateHeight(r->left);
+    AVL_updateHeight(r);
 }
 
 // Balance case: Left-Right
 template <typename T>
 void LR (AVL_TBinaryNode<T> *&r) {
-    AVL_TBinaryNode<T> *b = r; // B became sub-tree's root
-    AVL_TBinaryNode<T> *a = b->left; // A became left side of sub-tree's root
-    b->left = a->right->right;
-    r = a->right;
-    a->right = r->left;
-    r->left = a;
-    r->right = b;
-    switch (r->balance) {
-        case -1:
-            a->balance = 0;
-            b->balance = 1;
-            break;
-        case 0:
-            a->balance = 0;
-            b->balance = 0;
-            break;
-        case 1:
-            a->balance = -1;
-            b->balance = 0;
-            break;
-    }
+    RR(r->left);
+    LL(r);
 }
 
 // Balance case: Right-Left
 template <typename T>
 void RL (AVL_TBinaryNode<T> *&r) {
-    AVL_TBinaryNode<T> *b = r; // B became sub-tree's root
-    AVL_TBinaryNode<T> *a = b->right; // A became right side of sub-tree's root
-    r = a->left;
-    a->left = a->left->right;
-    b->right = r->left;
-    r->left = b;
-    r->right = a;
-    switch (r->balance) {
-        case -1:
-            a->balance = 1;
-            b->balance = 0;
-            break;
-        case 0:
-            a->balance = 0;
-            b->balance = 0;
-            break;
-        case 1:
-            a->balance = 0;
-            b->balance = -1;
-            break;
-    }
+    LL(r->right);
+    RR(r);
 }
 
 // Rebalance node after insert ou remove
 template <typename T>
-void AVL_rebalance(AVL_TBinaryNode<T>* &node) {
+void AVL_balance(AVL_TBinaryNode<T> *&node) {
     if (!node) // If nullptr
-        return;
+        return; 
 
-    AVL_updateBalanceFactor(node); // Firstly update balance factor
-    
-    if (node->balance > 1) { // If tree is left heavy (balance > 1)
-        AVL_updateBalanceFactor(node->left); // Check left child balance to decide LL or LR
-        if (node->left->balance >= 0) // LL case
+    AVL_updateHeight(node); // Firstly update height
+     int balance = AVL_getBalance(node);
+
+    if (balance > 1) { // If tree is left heavy (balance > 1)
+        if (AVL_getBalance(node->left) >= 0) // LL case
             LL(node);
         else // LR case
             LR(node);
-    } else if (node->balance < -1) {  // If tree is right heavy (balance < -1)
-        AVL_updateBalanceFactor(node->right); // Check right child balance to decide RR or RL
-        if (node->right->balance <= 0) // RR case
+    } 
+    else if (balance < -1) { // If tree is right heavy (balance < -1)
+        if (AVL_getBalance(node->right) <= 0) // RR case
             RR(node);
         else // RL case
             RL(node);
+    } else {
+        AVL_updateHeight(node);
     }
 }
 
@@ -156,29 +134,23 @@ void AVL_rebalance(AVL_TBinaryNode<T>* &node) {
 template <typename T>
 bool AVL_insert(AVL_TBinaryNode<T> *&node, int key, T data) {
     if (node == nullptr) {
-        node = new AVL_TBinaryNode<T>;
-        node->key = key;
-        node->data = data;
-        node->balance = 0;
-        node->right = nullptr;
-        node->left = nullptr;
+        node = AVL_newNode(key, data);
         return true;
     }  
     
     // Navigate to correct position
     if (key < node->key) {
-        if (!AVL_insert(node->left, key, data))
+        if (!AVL_insert(node->left, key, data)) 
             return false;
     } else if (key > node->key) {
-        if (!AVL_insert(node->right, key, data))
+        if (!AVL_insert(node->right, key, data)) 
             return false;
     } else {
-        node->data = data;  // Duplicated key: overwrite data
-        return true;
+        return false; // Duplicate key is not inserted
     }
 
     // After insertion, rebalance current node
-    AVL_rebalance(node);
+    AVL_balance(node);
     return true;
 }
 
@@ -215,25 +187,15 @@ void AVL_remove(AVL_TBinaryNode<T>* &node, int key) {
             node = node->left;
             delete temp;
         } else { // Node has two children: find the largest in left subtree
-            AVL_TBinaryNode<T>* pred = node->left;
-            AVL_TBinaryNode<T>* predParent = node;
-            while (pred->right) {
-                predParent = pred;
-                pred = pred->right;
-            } // Copy predecessor key/data to current node
+            AVL_TBinaryNode<T>* pred = AVL_max(node->left);
             node->key = pred->key;
             node->data = pred->data;
-    
-            if (predParent->right == pred) // Remove predecessor node
-                predParent->right = pred->left;
-            else
-                predParent->left = pred->left;
-            delete pred;
+            AVL_remove(node->left, pred->key);
         }
     }
 
     if (node) // Rebalance subtree
-        AVL_rebalance(node);
+        AVL_balance(node);
 }
 
 // Print tree (ascending by key)
@@ -268,7 +230,7 @@ void AVL_showTree(AVL_TBinaryNode<T> *node, int b) {
 
 // Delete tree
 template <typename T>
-void AVL_destroyTree(AVL_TBinaryNode<T>* &node) {
+void AVL_destroyTree(AVL_TBinaryNode<T> *&node) {
     if (!node)
         return;
     AVL_destroyTree(node->left);
@@ -279,7 +241,7 @@ void AVL_destroyTree(AVL_TBinaryNode<T>* &node) {
 
 // Min node
 template <typename T>
-AVL_TBinaryNode<T>* AVL_min(AVL_TBinaryNode<T>* node) {
+AVL_TBinaryNode<T>* AVL_min(AVL_TBinaryNode<T> *node) {
     if (!node) 
         return nullptr;
     while (node->left)
@@ -289,17 +251,15 @@ AVL_TBinaryNode<T>* AVL_min(AVL_TBinaryNode<T>* node) {
 
 // Max node
 template <typename T>
-AVL_TBinaryNode<T>* AVL_max(AVL_TBinaryNode<T>* node) {
-    if (!node) 
-        return nullptr;
-    while (node->right)
+AVL_TBinaryNode<T>* AVL_max(AVL_TBinaryNode<T> *node) {
+    while (node && node->right)
         node = node->right;
     return node;
 }
 
 // Check if tree contains key
 template <typename T>
-bool AVL_contains(AVL_TBinaryNode<T>* node, int key) {
+bool AVL_contains(AVL_TBinaryNode<T> *node, int key) {
     if (!node) 
         return false;
     if (key == node->key) 
@@ -311,7 +271,7 @@ bool AVL_contains(AVL_TBinaryNode<T>* node, int key) {
 
 // Return tree size
 template <typename T>
-int AVL_size(AVL_TBinaryNode<T>* node) {
+int AVL_size(AVL_TBinaryNode<T> *node) {
     if (!node) 
         return 0;
     return 1 + AVL_size(node->left) + AVL_size(node->right);
