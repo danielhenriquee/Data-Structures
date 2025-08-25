@@ -1,75 +1,47 @@
-// CPP program to implement B* tree 
+// Provided by Rafael Ballottin during Data Structures class
 #include <bits/stdc++.h>
 #include <iostream>
 using namespace std; 
 
-// This can be changed to any value -  
-// it is the order of the B* Tree 
-#define N 4  
+#define N 4 // B* Tree order
 
 struct node { 
-
-    // key of N-1 nodes 
-    int key[N - 1]; 
-
-    // Child array of 'N' length 
-    // Criança vetor de n tamanho
-    struct node* child[N]; 
-
-    // To state whether a leaf or not; if node  
-    // is a leaf, isleaf=1 else isleaf=0 
-    int isleaf; 
-
-    // Counts the number of filled keys in a node 
-    int n; 
-
-    // Keeps track of the parent node 
-    struct node* parent; 
+    int key[N - 1]; // key of N-1 nodes 
+    struct node* child[N]; // Child array of 'N' length 
+    int isleaf; // If node is a leaf = 1, else = 0
+    int n; // Counts the number of filled keys in a node    
+    struct node* parent;  // Keeps track of the parent node 
 }; 
 
-// This function searches for the leaf  
-// into which to insert element 'k' 
-node* searchforleaf(node* root, int k, node* parent, int chindex) 
-{ 
+// Searches for the leaf into which to insert element 'k' 
+node* searchforleaf(node* root, int k, node* parent, int chindex) { 
     if (root) { 
 
-        // If the passed root is a leaf node, then 
-        // k can be inserted in this node itself 
+        // If the passed root is a leaf node, then k can be inserted in this node itself 
         if (root->isleaf == 1) 
             return root; 
 
-        // If the passed root is not a leaf node,  
-        // implying there are one or more children 
+        // If the passed root is not a leaf node, implying there are one or more children 
         else { 
             int i; 
 
-          /*If passed root's initial key is itself g 
-            reater than the element to be inserted, 
-            we need to insert to a new leaf left of the root*/
+            // If passed root's initial key is greater than the element to be inserted, insert to a new leaf left of the root
             if (k < root->key[0]) 
                 root = searchforleaf(root->child[0], k, root, 0); 
 
-            else 
-            { 
-                // Find the first key whose value is greater  
-                // than the insertion value 
-                // and insert into child of that key 
+            else { 
+                // Find the first key whose value is greater than the insertion value and insert into child of that key
                 for (i = 0; i < root->n; i++) 
                     if (root->key[i] > k) 
                         root = searchforleaf(root->child[i], k, root, i); 
 
-                // If all the keys are less than the insertion  
-                // key value, insert to the right of last key 
+                // If all the keys are less than the insertion key value, insert to the right of last key
                 if (root->key[i - 1] < k) 
                     root = searchforleaf(root->child[i], k, root, i); 
             } 
         } 
-    } 
-    else { 
-
-        // If the passed root is NULL (there is no such  
-        // child node to search), then create a new leaf  
-        // node in that location 
+    } else { 
+        // If the passed root is NULL (there is no such child node to search), then create a new leaf node in that location 
         struct node* newleaf = new struct node; 
         newleaf->isleaf = 1; 
         newleaf->n = 0; 
@@ -79,23 +51,19 @@ node* searchforleaf(node* root, int k, node* parent, int chindex)
     } 
 } 
 
-node* insert(node* root, int k) 
-{ 
+node* insert(node* root, int k) { 
     if (root) { 
         node* p = searchforleaf(root, k, NULL, 0); 
         node* q = NULL; 
         int e = k; 
 
-        // If the leaf node is empty, simply  
-        // add the element and return 
         for (int e = k; p; p = p->parent) {  
-            if (p->n == 0) { 
+            if (p->n == 0) { // If the leaf node is empty, add the element and return 
                 p->key[0] = e; 
                 p->n = 1; 
                 return root; 
             } 
-            // If number of filled keys is less than maximum 
-            if (p->n < N - 1) { 
+            if (p->n < N - 1) { // If number of filled keys is less than maximum 
                 int i; 
                 for (i = 0; i < p->n; i++) { 
                     if (p->key[i] > e) { 
@@ -109,8 +77,7 @@ node* insert(node* root, int k)
                 return root; 
             } 
 
-            // If number of filled keys is equal to maximum  
-            // and it's not root and there is space in the parent 
+            // If number of filled keys is equal to maximum and it's not root and there is space in the parent
             if (p->n == N - 1 && p->parent && p->parent->n < N) { 
                 int m; 
                 for (int i = 0; i < p->parent->n; i++) 
@@ -119,16 +86,11 @@ node* insert(node* root, int k)
                         break; 
                     } 
 
-                // If right sibling is possible 
-                if (m + 1 <= N - 1)  
-                { 
-                    // q is the right sibling 
-                    q = p->parent->child[m + 1]; 
+                if (m + 1 <= N - 1) { // If right sibling is possible 
+                    q = p->parent->child[m + 1]; // q is the right sibling 
 
                     if (q) { 
-
-                        // If right sibling is full 
-                        if (q->n == N - 1) { 
+                        if (q->n == N - 1) { // If right sibling is full 
                             node* r = new node; 
                             int* z = new int[((2 * N) / 3)]; 
                             int parent1, parent2; 
@@ -142,9 +104,7 @@ node* insert(node* root, int k)
                             for (int j = i + 2; j < ((i + 2) + (q->n)); j++)
                               marray[j] = q->key[j - (i + 2)]; 
 
-                            // marray=bubblesort(marray, 2*N) 
-                            // a more rigorous implementation will  
-                            // sort these elements 
+                            // marray=bubblesort(marray, 2*N) a more rigorous implementation will sort these elements 
 
                             // Put first (2*N-2)/3 elements into keys of p 
                             for (int i = 0; i < (2 * N - 2) / 3; i++) 
@@ -160,8 +120,7 @@ node* insert(node* root, int k)
                             for (int f = ((4 * N) / 3 + 1); f < 2 * N; f++) 
                                 r->key[f - ((4 * N) / 3 + 1)] = marray[f]; 
 
-                            // Because m=0 and m=1 are children of the same key, 
-                            // a special case is made for them 
+                            // Because m=0 and m=1 are children of the same key, a special case is made for them 
                             if (m == 0 || m == 1) { 
                                 p->parent->key[0] = parent1; 
                                 p->parent->key[1] = parent2; 
@@ -169,8 +128,7 @@ node* insert(node* root, int k)
                                 p->parent->child[1] = q; 
                                 p->parent->child[2] = r; 
                                 return root; 
-                            } 
-                            else { 
+                            } else { 
                                 p->parent->key[m - 1] = parent1; 
                                 p->parent->key[m] = parent2; 
                                 p->parent->child[m - 1] = p; 
@@ -179,9 +137,7 @@ node* insert(node* root, int k)
                                 return root; 
                             } 
                         } 
-                    } 
-                    else // If right sibling is not full 
-                    { 
+                    } else { // If right sibling is not full 
                         int put; 
                         if (m == 0 || m == 1) 
                             put = p->parent->key[0]; 
@@ -195,12 +151,8 @@ node* insert(node* root, int k)
                 } 
             } 
         } 
-        /*Cases of root splitting, etc. are omitted  
-         as this implementation is just to demonstrate  
-         the two-three split operation*/
-    } 
-    else 
-    { 
+        // Cases of root splitting, etc. are omitted as this implementation is just to demonstrate the two-three split operation
+    } else { 
         // Create new node if root is NULL 
         struct node* root = new struct node; 
         root->key[0] = k; 
@@ -211,8 +163,7 @@ node* insert(node* root, int k)
 } 
 
 // Driver code 
-int main() 
-{ 
+int main()  { 
     /* Consider the following tree that has been obtained  
        from some root split: 
                 6              
