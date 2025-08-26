@@ -66,7 +66,7 @@ int main() {
                     cin.get();
                     break;
                 case 5: // Show tree sideways
-                    cout << "AVL Tree structure:\n";
+                    cout << "SBB Tree structure:\n";
                     SBB_showTree(tree.root, 0);
                     cout << "Type any character to return to the menu...";
                     cin.ignore();
