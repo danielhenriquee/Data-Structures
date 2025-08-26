@@ -4,6 +4,7 @@
 #define SBBTREE_H
 
 #include <iostream>
+#include <stdexcept>
 
 // Generic element
 const char VERTICAL = 'v';
@@ -137,11 +138,15 @@ int SBB_insert (SBB_TBinaryNode<T> *&node, int key, T data) {
 
 // Search by key
 template<typename T>
-T* SBB_searchData(SBB_TBinaryNode<T>* node, int key) {
-    if (!node) return nullptr;
-    if (key == node->key) return &node->data;
-    if (key < node->key) return SBB_searchData(node->left, key);
-    else return SBB_searchData(node->right, key);
+T SBB_searchData(SBB_TBinaryNode<T>* node, int key) {
+    if (!node) 
+        throw std::out_of_range("Error: key not found.");
+    if (key == node->key) 
+        return node->data;
+    if (key < node->key) 
+        return SBB_searchData(node->left, key);
+    else 
+        return SBB_searchData(node->right, key);
 }
 
 // Size of tree
@@ -153,10 +158,10 @@ int SBB_size(SBB_TBinaryNode<T>* node) {
 
 // Destroy tree
 template<typename T>
-void SBB_destroy(SBB_TBinaryNode<T>*& node) {
+void SBB_destroyTree(SBB_TBinaryNode<T>*& node) {
     if (!node) return;
-    SBB_destroy(node->left);
-    SBB_destroy(node->right);
+    SBB_destroyTree(node->left);
+    SBB_destroyTree(node->right);
     delete node;
     node = nullptr;
 }
@@ -195,6 +200,48 @@ SBB_TBinaryNode<T>* SBB_remove(SBB_TBinaryNode<T>* node, int key) {
         node->right = SBB_remove(node->right, temp->key);
     }
     return node;
+}
+
+// Print tree (ascending by key)
+template <typename T>
+void SBB_printTree(SBB_TBinaryNode<T> *node) {
+    if (node != nullptr) {
+        SBB_printTree(node->left);
+        cout << node->key << " ";
+        SBB_printTree(node->right);
+    }
+}
+
+// Print node with indentation
+template <typename T>
+void SBB_printNode(T k, int b) {
+    for (int i = 0; i < b; i++)
+        cout << "   ";
+    cout << k << endl;
+}
+
+// Print tree (sideways visualization)
+template <typename T>
+void SBB_showTree(SBB_TBinaryNode<T> *node, int b) {
+    if (node == nullptr) {
+        SBB_printNode(0, b);
+        return;
+    }
+    SBB_showTree(node->right, b+2);
+    SBB_printNode(node->key, b);
+    SBB_showTree(node->left, b+2);
+}
+
+// Check if tree contains key
+template <typename T>
+bool SBB_contains(SBB_TBinaryNode<T> *node, int key) {
+    if (!node) 
+        return false;
+    if (key == node->key) 
+        return true;
+    if (key < node->key) 
+        return SBB_contains(node->left, key);
+    return SBB_contains(node->right, key);
 }
 
 #endif // SBBTREE_H
