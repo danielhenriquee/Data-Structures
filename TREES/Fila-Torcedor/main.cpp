@@ -64,24 +64,24 @@ int create_member_wait_time(float total[], float proportion[]) {
 }
 
 // Creates a new cheerer
-cheerer *create_cheerer(bool is_member, int &IDcounter, float total_regular[], float proportion_regular[], float total_members[], float proportion_members[]) {
-    cheerer *e = new cheerer;
+Cheerer *create_cheerer(bool is_member, int &IDcounter, float total_regular[], float proportion_regular[], float total_member[], float proportion_member[]) {
+    Cheerer *e = new Cheerer;
     if (is_member == 1) { // If club member
-        e->wait_time = create_member_wait_time(total_members, proportion_members);
+        e->wait_time = create_member_wait_time(total_member, proportion_member);
         e->is_club_member = is_member;
         e->id = ++IDcounter;
     } else { // Se normal
         e->wait_time = create_regular_wait_time(total_regular, proportion_regular);
-        e->isClubMember = is_member;
+        e->is_club_member = is_member;
         e->id = ++IDcounter;
     }
       return e;
 }
 
 // Finds the index of the queue with the smallest size
-int find_smallest_queue_index(TListQ<cheerer> ticket[], int count) {
+int find_smallest_queue_index(LinkedQ_TList<Cheerer> ticket[], int count) {
     int k = 0; // Returns the index of the vector containing the smaller row
-    TListQ<cheerer> smallest = ticket[0]; // Contains the smallest queue
+    LinkedQ_TList<Cheerer> smallest = ticket[0]; // Contains the smallest queue
     for (int i = 0; i < count; i++) {
         if (ticket[i].size < smallest.size) { // Checks if the current index row is smaller than the smallest row
             smallest = ticket[i];
@@ -92,8 +92,8 @@ int find_smallest_queue_index(TListQ<cheerer> ticket[], int count) {
 }
 
 // Print queue
-void print_queue(TListQ<cheerer> q) {
-    TElementQ<cheerer> *nav = q.first;
+void print_queue(LinkedQ_TList<Cheerer> q) {
+    LinkedQ_TElement<Cheerer> *nav = q.first;
     if (!nav)
         cout << "\nEmpty Queue.";
         return;
@@ -114,17 +114,17 @@ int main() {
     
     float total_regular[3] = {0.0}; // Counts of regular cheerers by wait_time 1,2,3
     float proportion_regular[3] = {0.0};
-    float total_members[2] = {0.0}; // Counts of club members by wait_time 1,2
-    float proportion_members[2] = {0.0};
+    float total_member[2] = {0.0}; // Counts of club members by wait_time 1,2
+    float proportion_member[2] = {0.0};
     float total_people[2] = {0.0}; // Counts of regular vs members
     float proportion_people[2] = {0.0};
     
-    cheerer newCheerer;
+    Cheerer newCheerer;
     float average_regular = 0.0, average_member = 0.0, aux = 0.0;
-    TListQ<Cheerer> regular_waiting_list; // Waiting list for regular cheerers in case there are no appropriate tickets
-    TListQ<Cheerer> member_waiting_list; // Waiting list for member club cheerers in case there are no appropriate tickets
-    bootLinkedQueue(regular_waiting_list);
-    bootLinkedQueue(member_waiting_list);
+    LinkedQ_TList<Cheerer> regular_waiting_list; // Waiting list for regular cheerers in case there are no appropriate tickets
+    LinkedQ_TList<Cheerer> member_waiting_list; // Waiting list for member club cheerers in case there are no appropriate tickets
+    LinkedQ_boot(regular_waiting_list);
+    LinkedQ_boot(member_waiting_list);
 
     // Input simulation parameters
     while (num_member_tickets < 0) {
@@ -147,161 +147,163 @@ int main() {
         cout << "5. Enter total number of time units to simulate: ";
         cin >> total_time_units;
 
-    // Inicializa todos os tickets de sócio-cheerer
-    TListQ<cheerer> ticket_socio[qtd_m];
-    for(int i = 0; i < qtd_m; i++) {
-        bootLinkedQueue(ticket_socio[i]);
+    // Initialize regular queues
+    LinkedQ_TList<Cheerer> regular_queues[num_regular_tickets];
+    for(int i = 0; i < num_regular_tickets; i++) {
+        LinkedQ_boot(regular_queues[i]);
     }
 
-    // Inicializa todos os tickets de cheerer normal
-    TListQ<cheerer> ticket_normal[qtd_r];
-    for(int i = 0; i < qtd_r; i++) {
-        bootLinkedQueue(ticket_normal[i]);
+    // Initialize member queues
+    LinkedQ_TList<Cheerer> member_queues[num_member_tickets];
+    for(int i = 0; i < num_member_tickets; i++) {
+        LinkedQ_boot(member_queues[i]);
     }
 
-    // Initialize queues
-    TListQ<Cheerer> member_queues[num_member_tickets];
-    for (int i = 0; i < num_member_tickets; i++) bootLinkedQueue(member_queues[i]);
+    // Initialize initial queue population
+    LinkedQ_TList<Cheerer> member_queues[num_member_tickets];
+    for (int i = 0; i < num_member_tickets; i++) LinkedQ_boot(member_queues[i]);
 
-    TListQ<Cheerer> regular_queues[num_regular_tickets];
-    for (int i = 0; i < num_regular_tickets; i++) bootLinkedQueue(regular_queues[i]);
+    LinkedQ_TList<Cheerer> regular_queues[num_regular_tickets];
+    for (int i = 0; i < num_regular_tickets; i++) LinkedQ_boot(regular_queues[i]);
 
     // Initialize initial queue population
     for (int i = 0; i < initial_queue_size; i++) {
-        new_cheerer_obj = *create_cheerer(determine_level(total_people, proportion_people), ID, total_regular, proportion_regular, total_members, proportion_members);
+        Cheerer new_cheerer_obj;
+        new_cheerer_obj = *create_cheerer(determine_level(total_people, proportion_people), ID, total_regular, proportion_regular, total_member, proportion_member);
         if (!new_cheerer_obj.is_club_member) {
             if (num_regular_tickets != 0)
-                queue(regular_queues[find_smallest_queue_index(regular_queues, num_regular_tickets)], new_cheerer_obj);
+                LinkedQ_enqueue(regular_queues[find_smallest_queue_index(regular_queues, num_regular_tickets)], new_cheerer_obj);
             else
-                queue(regular_waiting_list, new_cheerer_obj);
+                LinkedQ_enqueue(regular_waiting_list, new_cheerer_obj);
         } else {
             if (num_member_tickets != 0)
-                queue(member_queues[find_smallest_queue_index(member_queues, num_member_tickets)], new_cheerer_obj);
+                LinkedQ_enqueue(member_queues[find_smallest_queue_index(member_queues, num_member_tickets)], new_cheerer_obj);
             else
-                queue(member_waiting_list, new_cheerer_obj);
+                LinkedQ_enqueue(member_waiting_list, new_cheerer_obj);
         }
     }
 
     // Imprime todas as filas
-    cout << "wait_time: " << t << endl;
-    if (qtd_m == 0) {
+    cout << "wait_time: " << time_unit << endl;
+    if (num_member_tickets == 0) {
         cout << "\nFILA DE ESPERA SÓCIO-cheererES | Pessoas na fila: " << member_waiting_list.size << "\n";
         print_queue(member_waiting_list);
         cout << "\n";
     } else {
-        for(int i = 0; i < qtd_m; i++) {
-            cout << "\nFILA SOCIO = " << i+1 << " | Pessoas na fila: " << ticket_socio[i].size << "\n";
-            if (ticket_socio[i].first != NULL) {
-                print_queue(ticket_socio[i]);
+        for(int i = 0; i < num_member_tickets; i++) {
+            cout << "\nFILA SOCIO = " << i+1 << " | Pessoas na fila: " << member_queues[i].size << "\n";
+            if (member_queues[i].first != nullptr) {
+                print_queue(member_queues[i]);
                 cout << "\n";
             }
         }
     }
-    if (qtd_r == 0) {
+    if (num_regular_tickets == 0) {
         cout << "\nFILA DE ESPERA cheererES NORMAIS | Pessoas na fila: " << regular_waiting_list.size << "\n";
         print_queue(regular_waiting_list);
         cout << "\n";
     } else {
-        for(int i = 0; i < qtd_r; i++) {
-            cout << "\nFILA NORMAL = " << i+1 << " | Pessoas na fila: " << ticket_normal[i].size << "\n";
-            if (ticket_normal[i].first != NULL){
-                print_queue(ticket_normal[i]);
+        for(int i = 0; i < num_regular_tickets; i++) {
+            cout << "\nFILA NORMAL = " << i+1 << " | Pessoas na fila: " << regular_queues[i].size << "\n";
+            if (regular_queues[i].first != nullptr){
+                print_queue(regular_queues[i]);
                 cout << "\n";
             }
         }
     }
 
-    for (t = 0; t < all_wait_time; t++) {
+    for (time_unit = 0; time_unit < total_time_units; time_unit++) {
         system("pause");
         system("cls");
 
         // Adiciona os novos cheereres por unidade de wait_time
-        for (int i = 0; i < all_people_on_ticket; i++) {
-            newMember = *create_cheerer(isClubMember(total_people, proportion_people), ID, total_regular, proportion_regular, total_member, proportion_member);
-            if (newMember.isClubMember == false) { // Se for cheerer normal
-                if (qtd_r != 0)
-                    queue(ticket_normal[find_smallest_queue_index(ticket_normal, qtd_r)], newMember);
+        for (int i = 0; i < people_per_time_unit; i++) {
+            Cheerer new_cheerer_obj;
+            new_cheerer_obj = *create_cheerer(determine_level(total_people, proportion_people), ID, total_regular, proportion_regular, total_member, proportion_member);
+            if (new_cheerer_obj.is_club_member == false) { // Se for cheerer normal
+                if (num_regular_tickets != 0)
+                    LinkedQ_enqueue(regular_queues[find_smallest_queue_index(regular_queues, num_regular_tickets)], new_cheerer_obj);
                 else
-                    queue(regular_waiting_list, newMember);
+                    LinkedQ_enqueue(regular_waiting_list, new_cheerer_obj);
             } else { // Se for sócio-cheerer
-                if (qtd_m != 0)
-                    queue(ticket_socio[find_smallest_queue_index(ticket_socio, qtd_m)], newMember);
+                if (num_member_tickets != 0)
+                    LinkedQ_enqueue(member_queues[find_smallest_queue_index(member_queues, num_member_tickets)], new_cheerer_obj);
                 else
-                    queue(member_waiting_list, newMember);
+                    LinkedQ_enqueue(member_waiting_list, new_cheerer_obj);
             }
         }
 
-        for (int i = 0; i < qtd_r; i++) { // Passando por todos os primeiros da fila
-            if (ticket_normal[i].first != NULL) {
-                ticket_normal[i].first->data.wait_time--; // Decrementa wait_time do cheerer em atendimento
-                if (ticket_normal[i].first->data.wait_time == 0) { // Se wait_time = 0, passa pro próximo da fila
-                    dequeue(ticket_normal[i]);
+        for (int i = 0; i < num_regular_tickets; i++) { // Passando por todos os primeiros da fila
+            if (regular_queues[i].first != nullptr) {
+                regular_queues[i].first->data.wait_time--; // Decrementa wait_time do cheerer em atendimento
+                if (regular_queues[i].first->data.wait_time == 0) { // Se wait_time = 0, passa pro próximo da fila
+                    LinkedQ_dequeue(regular_queues[i]);
                 }
             }
         }
-        for (int i = 0; i < qtd_m; i++) { // Passando por todos os primeiros da fila
-            if (ticket_socio[i].first != NULL) {
-                ticket_socio[i].first->data.wait_time--; // Decrementa wait_time do cheerer em atendimento
-                if (ticket_socio[i].first->data.wait_time == 0) { // Se wait_time = 0, passa pro próximo da fila
-                    dequeue(ticket_socio[i]);
+        for (int i = 0; i < num_member_tickets; i++) { // Passando por todos os primeiros da fila
+            if (member_queues[i].first != nullptr) {
+                member_queues[i].first->data.wait_time--; // Decrementa wait_time do cheerer em atendimento
+                if (member_queues[i].first->data.wait_time == 0) { // Se wait_time = 0, passa pro próximo da fila
+                    LinkedQ_dequeue(member_queues[i]);
                 }
             }
         }
     
         // Imprime todas as filas
         cout << "wait_time: " << t+1 << endl; // Imprime na tela o wait_time atual de reprodução da simulação
-        if (qtd_m == 0) {  // Verifica se a quantidade de tickets sócio-cheerer é =0
+        if (num_member_tickets == 0) {  // Verifica se a quantidade de tickets sócio-cheerer é =0
             cout << "\nFILA DE ESPERA SÓCIO-cheererES | Pessoas na fila: " << member_waiting_list.size << "\n";
             print_queue(member_waiting_list);  // Imprime na tela a fila de espera de sócio-cheereres
             cout << "\n";
         } else { // Se a quantidade de tickets sócio-cheerer é !=0
-            for(int i = 0; i < qtd_m; i++) {
-                cout << "\nFILA SOCIO = " << i+1 << " | Pessoas na fila: " << ticket_socio[i].size << "\n";
-                if (ticket_socio[i].first != NULL) {
-                    print_queue(ticket_socio[i]); // Imprime na tela a fila sócios-cheereres
+            for(int i = 0; i < num_member_tickets; i++) {
+                cout << "\nFILA SOCIO = " << i+1 << " | Pessoas na fila: " << member_queues[i].size << "\n";
+                if (member_queues[i].first != nullptr) {
+                    print_queue(member_queues[i]); // Imprime na tela a fila sócios-cheereres
                     cout << "\n";
                 }
             }
         }
-        if (qtd_r == 0) { // Verifica se a quantidade de tickets cheerer-normal é = 0
+        if (num_regular_tickets == 0) { // Verifica se a quantidade de tickets cheerer-normal é = 0
             cout << "\nFILA DE ESPERA cheererES NORMAIS | Pessoas na fila: " << regular_waiting_list.size << "\n";
             print_queue(regular_waiting_list); // Imprime na tela a fila de espera de cheereres-normais
             cout << "\n";
         } else { // Se a quantidade de tickets cheerer-normal é !=0
-            for(int i = 0; i < qtd_r; i++) {
-                cout << "\nFILA NORMAL = " << i+1 << " | Pessoas na fila: " << ticket_normal[i].size << "\n";
-                if (ticket_normal[i].first != NULL){
-                    print_queue(ticket_normal[i]); // Imprime na tela a fila cheereres-normais
+            for(int i = 0; i < num_regular_tickets; i++) {
+                cout << "\nFILA NORMAL = " << i+1 << " | Pessoas na fila: " << regular_queues[i].size << "\n";
+                if (regular_queues[i].first != nullptr){
+                    print_queue(regular_queues[i]); // Imprime na tela a fila cheereres-normais
                     cout << "\n";
                 }
             }
         }
 
         aux = 0;
-        for (int i = 0; i< qtd_r; i++) // Calcula a quantidade média de cheerer normal
-            aux += ticket_normal[i].size;
-        aux = aux / qtd_r; // Aux = aux % número de filas
+        for (int i = 0; i< num_regular_tickets; i++) // Calcula a quantidade média de cheerer normal
+            aux += regular_queues[i].size;
+        aux = aux / num_regular_tickets; // Aux = aux % número de filas
         average_regular += aux;
     
         aux = 0;
-        for (int i = 0; i< qtd_m; i++) // Calcula a quantidade média de sócio-cheereres
-            aux += ticket_socio[i].size;
-        aux = aux / qtd_m; // Aux = aux % número de filas
+        for (int i = 0; i< num_member_tickets; i++) // Calcula a quantidade média de sócio-cheereres
+            aux += member_queues[i].size;
+        aux = aux / num_member_tickets; // Aux = aux % número de filas
         average_member += aux;
 
   } // Encerra a simulação
 
-  if (all_wait_time != 0) {  // Verifica se o wait_time é diferente de zero
-      average_regular = average_regular / all_wait_time; // Calcula a média de cheereres normais que esperam nas filas dos tickets
-      average_member = average_member / all_wait_time; // Calcula a média de sócio-cheereres que esperam nas filas dos tickets
+  if (total_time_units != 0) {  // Verifica se o wait_time é diferente de zero
+      average_regular = average_regular / total_time_units; // Calcula a média de cheereres normais que esperam nas filas dos tickets
+      average_member = average_member / total_time_units; // Calcula a média de sócio-cheereres que esperam nas filas dos tickets
   }
 
-  if (qtd_r == 0) // Verifica se existe ticket para cheereres normais
+  if (num_regular_tickets == 0) // Verifica se existe ticket para cheereres normais
       cout << " \n Não há tickets para cheereres normais ";
   else
       cout << " \n Quantidade média de cheereres normais que esperam por ticket a cada unidade de wait_time: " << average_regular;
 
-  if (qtd_m == 0) // Verifica se existe ticket para sócio-cheereres
+  if (num_member_tickets == 0) // Verifica se existe ticket para sócio-cheereres
       cout << " \n Não há tickets para ´socio-cheereres ";
   else
       cout << " \n Quantidade média de sócio-cheereres que esperam por ticket a cada unidade de wait_time: " << average_member;
