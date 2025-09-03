@@ -14,12 +14,14 @@ struct LinkedQ_TElement {
 template <typename T>
 struct LinkedQ_TList {
     LinkedQ_TElement<T> *first;
+    int size;
 };
 
 // Boot Generic Linked Queue
 template <typename T>
 bool LinkedQ_boot(LinkedQ_TList<T> &list) {
     list.first = nullptr;
+    list.size = 0;
     return true;
 }
 
@@ -29,7 +31,8 @@ bool LinkedQ_enqueue(LinkedQ_TList<T> &list, const T &data) {
     LinkedQ_TElement<T> *e = new LinkedQ_TElement<T>;
     e->data = data;
     e->next = nullptr;
-  
+    list.size++;
+
     if (list.first == nullptr) { // If queue is empty
         list.first = e; // Insert as first (and last) position
         return true;
@@ -52,6 +55,7 @@ T LinkedQ_dequeue(LinkedQ_TList<T> &list) {
     T data = list.first->data; // Save data of the first element
     list.first = list.first->next; // list.first points to second element
     delete temp;
+    list.size--;
     return data; // Return data from first element
 }
 
@@ -68,6 +72,7 @@ void LinkedQ_destroyQueue(LinkedQ_TList<T> &list) {
         list.first = list.first->next;
         delete temp;
     }
+    list.size = 0;
     list.first = nullptr; // Safety reset
 }
 
