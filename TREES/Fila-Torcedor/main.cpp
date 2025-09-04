@@ -114,7 +114,7 @@ void print_queue(LinkedQ_TList<Cheerer> q) {
     }
     while (nav) {
         cout << "ID: " << nav->data.id << " | ";
-        cout << "Member: " << nav->data.is_club_member  << " | ";
+        cout << "Member: " << (nav->data.is_club_member ? "Club" : "Regular") << " | ";
         cout << "Wait time: " <<nav->data.wait_time << " | ";
         cout << "\n";
         nav = nav->next;
@@ -124,35 +124,39 @@ void print_queue(LinkedQ_TList<Cheerer> q) {
 // Print all queues
 void print_all_queues(int time_unit, int num_member_tickets, int num_regular_tickets, LinkedQ_TList<Cheerer> member_waiting_list, 
                     LinkedQ_TList<Cheerer> regular_waiting_list, LinkedQ_TList<Cheerer> member_queues[], LinkedQ_TList<Cheerer> regular_queues[]) {
-    cout << "wait_time: " << time_unit << endl << endl;
+    cout << "=================== TIME UNIT: " << time_unit << " ===================\n\n";
 
+    // -------- CLUB MEMBERS --------
+    cout << "==================== CLUB MEMBERS QUEUES ====================\n";
     if (num_member_tickets == 0) { // Check if the number of club members tickets is =0
-        cout << "CLUB MEMBERS WAITING QUEUE | On queue: " << member_waiting_list.size << "\n";
-        print_queue(member_waiting_list); // Print club members waiting list
-        cout << "\n";
+        cout << "WAITING QUEUE | People: " << member_waiting_list.size << "\n";
+        print_queue(member_waiting_list);
     } else { // If the number of club members tickets is !=0
-        for(int i = 0; i < num_member_tickets; i++) {
+        for (int i = 0; i < num_member_tickets; i++) {
             cout << "CLUB MEMBERS QUEUE = " << i+1 << " | On queue: " << member_queues[i].size << "\n";
             if (member_queues[i].first != nullptr) {
-                print_queue(member_queues[i]); // Print club members queues
+                print_queue(member_queues[i]);
                 cout << "\n";
             }
         }
     }
+    cout << "============================================================\n\n";
 
+    // -------- REGULAR --------
+    cout << "====================== REGULAR QUEUES ======================\n";
     if (num_regular_tickets == 0) { // Check if the number of regular tickets is =0
-        cout << "REGULAR WAITING QUEUE | On queue: " << regular_waiting_list.size << "\n";
-        print_queue(regular_waiting_list); // Print regulars waiting list
-        cout << "\n";
+        cout << "WAITING QUEUE | People: " << regular_waiting_list.size << "\n";
+        print_queue(regular_waiting_list);
     } else { // If the number of regular tickets is !=0
         for(int i = 0; i < num_regular_tickets; i++) {
-            cout << "\nREGULAR QUEUE = " << i+1 << " | On queue: " << regular_queues[i].size << "\n";
+            cout << "REGULAR QUEUE = " << i+1 << " | On queue: " << regular_queues[i].size << "\n";
             if (regular_queues[i].first != nullptr){
-                print_queue(regular_queues[i]); // Print regulars queues
+                print_queue(regular_queues[i]);
                 cout << "\n";
             }
         }
     }
+    cout << "============================================================\n\n";
 }
 
 int main() {
@@ -270,17 +274,21 @@ int main() {
         // Print all queues
         print_all_queues(time_unit, num_member_tickets, num_regular_tickets, member_waiting_list, regular_waiting_list, member_queues, regular_queues);
 
-        aux = 0;
-        for (int i = 0; i< num_regular_tickets; i++) // Calculate the average amount of regulars
-            aux += regular_queues[i].size;
-        aux = aux / num_regular_tickets; // Aux = aux % number of queues
-        average_regular += aux;
+        if (num_regular_tickets > 0) {
+            aux = 0;
+            for (int i = 0; i < num_regular_tickets; i++) // Calculate the average amount of regulars
+                aux += regular_queues[i].size;
+            aux = aux / num_regular_tickets; // Aux = aux % number of queues
+            average_regular += aux;
+        }
     
-        aux = 0;
-        for (int i = 0; i< num_member_tickets; i++) // Calculate the average amount of club members
-            aux += member_queues[i].size;
-        aux = aux / num_member_tickets; // Aux = aux % umber of queues
-        average_member += aux;
+        if (num_member_tickets > 0) {
+            aux = 0;
+            for (int i = 0; i < num_member_tickets; i++) // Calculate the average amount of club members
+                aux += member_queues[i].size;
+            aux = aux / num_member_tickets; // Aux = aux % number of queues
+            average_member += aux;
+        }
 
     } // End simulation
 
