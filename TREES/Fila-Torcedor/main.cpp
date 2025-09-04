@@ -89,7 +89,7 @@ Cheerer *create_cheerer(bool is_member, int &IDcounter, float total_regular[], f
         e->is_club_member = is_member;
         e->id = ++IDcounter;
     }
-      return e;
+    return e;
 }
 
 // Finds the index of the queue with the smallest size
