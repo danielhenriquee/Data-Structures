@@ -161,13 +161,6 @@ int main() {
     }
 
     // Initialize initial queue population
-    LinkedQ_TList<Cheerer> member_queues[num_member_tickets];
-    for (int i = 0; i < num_member_tickets; i++) LinkedQ_boot(member_queues[i]);
-
-    LinkedQ_TList<Cheerer> regular_queues[num_regular_tickets];
-    for (int i = 0; i < num_regular_tickets; i++) LinkedQ_boot(regular_queues[i]);
-
-    // Initialize initial queue population
     for (int i = 0; i < initial_queue_size; i++) {
         Cheerer new_cheerer_obj;
         new_cheerer_obj = *create_cheerer(determine_level(total_people, proportion_people), ID, total_regular, proportion_regular, total_member, proportion_member);
@@ -184,15 +177,15 @@ int main() {
         }
     }
 
-    // Imprime todas as filas
+    // Print all queues
     cout << "wait_time: " << time_unit << endl;
     if (num_member_tickets == 0) {
-        cout << "\nFILA DE ESPERA SÓCIO-cheererES | Pessoas na fila: " << member_waiting_list.size << "\n";
+        cout << "\nCLUB MEMBERS WAITING QUEUE | On queue: " << member_waiting_list.size << "\n";
         print_queue(member_waiting_list);
         cout << "\n";
     } else {
         for(int i = 0; i < num_member_tickets; i++) {
-            cout << "\nFILA SOCIO = " << i+1 << " | Pessoas na fila: " << member_queues[i].size << "\n";
+            cout << "\nCLUB MEMBERS QUEUE = " << i+1 << " | On queue: " << member_queues[i].size << "\n";
             if (member_queues[i].first != nullptr) {
                 print_queue(member_queues[i]);
                 cout << "\n";
@@ -200,12 +193,12 @@ int main() {
         }
     }
     if (num_regular_tickets == 0) {
-        cout << "\nFILA DE ESPERA cheererES NORMAIS | Pessoas na fila: " << regular_waiting_list.size << "\n";
+        cout << "\nREGULAR WAITING QUEUE | On queue: " << regular_waiting_list.size << "\n";
         print_queue(regular_waiting_list);
         cout << "\n";
     } else {
         for(int i = 0; i < num_regular_tickets; i++) {
-            cout << "\nFILA NORMAL = " << i+1 << " | Pessoas na fila: " << regular_queues[i].size << "\n";
+            cout << "\nREGULAR QUEUE = " << i+1 << " | On queue: " << regular_queues[i].size << "\n";
             if (regular_queues[i].first != nullptr){
                 print_queue(regular_queues[i]);
                 cout << "\n";
@@ -294,20 +287,20 @@ int main() {
 
     } // Encerra a simulação
 
-    if (total_time_units != 0) {  // Verifica se o wait_time é diferente de zero
-        average_regular = average_regular / total_time_units; // Calcula a média de cheereres normais que esperam nas filas dos tickets
-        average_member = average_member / total_time_units; // Calcula a média de sócio-cheereres que esperam nas filas dos tickets
+    if (total_time_units != 0) { // Check if wait_time is not zero
+        average_regular = average_regular / total_time_units; // Calculates the average number of regulars wait time
+        average_member = average_member / total_time_units; // Calculates the average number of club members wait time
     }
 
-    if (num_regular_tickets == 0) // Verifica se existe ticket para cheereres normais
-        cout << " \n Não há tickets para cheereres normais ";
+    if (num_regular_tickets == 0) // Check if there is a ticket for regulars
+        cout << " \nThere are no tickets for regulars.";
     else
-        cout << " \n Quantidade média de cheereres normais que esperam por ticket a cada unidade de wait_time: " << average_regular;
+        cout << " \nAverage number of regulars waiting for a ticket per unit of wait_time: " << average_regular;
 
     if (num_member_tickets == 0) // Verifica se existe ticket para sócio-cheereres
-        cout << " \n Não há tickets para ´socio-cheereres ";
+        cout << " \nThere are no tickets for club members.";
     else
-        cout << " \n Quantidade média de sócio-cheereres que esperam por ticket a cada unidade de wait_time: " << average_member;
+        cout << " \nAverage number of club members waiting for a ticket per unit of wait_time: " << average_member;
 
     return 0;
 }
