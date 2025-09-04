@@ -229,7 +229,7 @@ int main() {
     // Print all queues
     print_all_queues(time_unit, num_member_tickets, num_regular_tickets, member_waiting_list, regular_waiting_list, member_queues, regular_queues);
 
-    for (time_unit = 0; time_unit < total_time_unprint_all_queues(time_unit, num_member_tickets, num_regular_tickets, member_waiting_list, regular_waiting_list, member_queues, regular_queues);its; time_unit++) {
+    for (time_unit = 0; time_unit < total_time_units; time_unit++) {
         wait_enter();
         clear();
 
