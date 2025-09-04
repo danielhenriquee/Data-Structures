@@ -70,7 +70,7 @@ Cheerer *create_cheerer(bool is_member, int &IDcounter, float total_regular[], f
         e->wait_time = create_member_wait_time(total_member, proportion_member);
         e->is_club_member = is_member;
         e->id = ++IDcounter;
-    } else { // Se normal
+    } else { // If regular
         e->wait_time = create_regular_wait_time(total_regular, proportion_regular);
         e->is_club_member = is_member;
         e->id = ++IDcounter;
@@ -285,7 +285,7 @@ int main() {
         aux = aux / num_member_tickets; // Aux = aux % umber of queues
         average_member += aux;
 
-    } // Encerra a simulação
+    } // End simulation
 
     if (total_time_units != 0) { // Check if wait_time is not zero
         average_regular = average_regular / total_time_units; // Calculates the average number of regulars wait time
@@ -297,7 +297,7 @@ int main() {
     else
         cout << " \nAverage number of regulars waiting for a ticket per unit of wait_time: " << average_regular;
 
-    if (num_member_tickets == 0) // Verifica se existe ticket para sócio-cheereres
+    if (num_member_tickets == 0) //  Check if there is a ticket for club members
         cout << " \nThere are no tickets for club members.";
     else
         cout << " \nAverage number of club members waiting for a ticket per unit of wait_time: " << average_member;
