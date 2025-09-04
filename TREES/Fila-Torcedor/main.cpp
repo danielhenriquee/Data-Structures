@@ -16,6 +16,12 @@ void clear() {
     #endif
 }
 
+void wait_enter() {
+    std::cout << "\n[ENTER] para continuar...";
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // descarta resto da linha
+    std::cin.get(); // espera ENTER
+}
+
 // Cheerer struct
 struct Cheerer {
     int id;
@@ -186,14 +192,14 @@ int main() {
     }
 
     // Print all queues
-    cout << "wait_time: " << time_unit << endl;
+    cout << "wait_time: " << time_unit << endl << endl;
     if (num_member_tickets == 0) {
-        cout << "\nCLUB MEMBERS WAITING QUEUE | On queue: " << member_waiting_list.size << "\n";
+        cout << "CLUB MEMBERS WAITING QUEUE | On queue: " << member_waiting_list.size << "\n";
         print_queue(member_waiting_list);
         cout << "\n";
     } else {
         for(int i = 0; i < num_member_tickets; i++) {
-            cout << "\nCLUB MEMBERS QUEUE = " << i+1 << " | On queue: " << member_queues[i].size << "\n";
+            cout << "CLUB MEMBERS QUEUE = " << i+1 << " | On queue: " << member_queues[i].size << "\n";
             if (member_queues[i].first != nullptr) {
                 print_queue(member_queues[i]);
                 cout << "\n";
@@ -201,7 +207,7 @@ int main() {
         }
     }
     if (num_regular_tickets == 0) {
-        cout << "\nREGULAR WAITING QUEUE | On queue: " << regular_waiting_list.size << "\n";
+        cout << "REGULAR WAITING QUEUE | On queue: " << regular_waiting_list.size << "\n";
         print_queue(regular_waiting_list);
         cout << "\n";
     } else {
@@ -215,7 +221,7 @@ int main() {
     }
 
     for (time_unit = 0; time_unit < total_time_units; time_unit++) {
-        pause();
+        wait_enter();
         clear();
 
         // Add new cheerers by unit time
