@@ -8,6 +8,14 @@
 #include "linkedQueue.h"
 using namespace std;
 
+void clear() {
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear");
+    #endif
+}
+
 // Cheerer struct
 struct Cheerer {
     int id;
@@ -207,8 +215,8 @@ int main() {
     }
 
     for (time_unit = 0; time_unit < total_time_units; time_unit++) {
-        system("pause");
-        system("cls");
+        pause();
+        clear();
 
         // Add new cheerers by unit time
         for (int i = 0; i < people_per_time_unit; i++) {
