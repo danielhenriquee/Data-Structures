@@ -95,15 +95,15 @@ Cheerer *create_cheerer(bool is_member, int &IDcounter, float total_regular[], f
 
 // Finds the index of the queue with the smallest size
 int find_smallest_queue_index(LinkedQ_TList<Cheerer> ticket[], int count) {
-    int k = 0; // Returns the index of the vector containing the smaller row
-    LinkedQ_TList<Cheerer> smallest = ticket[0]; // Contains the smallest queue
-    for (int i = 0; i < count; i++) {
-        if (ticket[i].size < smallest.size) { // Checks if the current index row is smaller than the smallest row
-            smallest = ticket[i];
-            k = i;
+    int idx = 0; 
+    int min_size = ticket[0].size;
+    for (int i = 1; i < count; i++) {
+        if (ticket[i].size < min_size) { // Checks if the current index row is smaller than the smallest row
+            min_size = ticket[i].size; // Contains the smallest queue
+            idx = i;
         }
     }
-    return k;
+    return idx; // Returns the index of the vector containing the smaller row
 }
 
 // Print queue
