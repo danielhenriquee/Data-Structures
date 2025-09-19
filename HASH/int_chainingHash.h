@@ -1,5 +1,8 @@
 // Daniel Henrique da Silva
 
+#ifndef INT_CHAININGHHASH_H
+#define INT_CHAININGHHASH_H
+
 #include <iostream>
 #include <stdexcept>
 using namespace std;
@@ -8,7 +11,7 @@ const int SIZE = 8; // HASH TABLE SIZE
 
 // Node for the chaining linked list
 struct chainingNode {
-    int key; // Value stored in the node
+    int key; // Stored integer
     chainingNode* next; // Pointer to the next node in the chain
 };
 
@@ -101,3 +104,5 @@ void chainingHash_clear(chainingNode* table[]) {
         table[i] = nullptr; // Reset index to empty
     }
 }
+
+#endif
