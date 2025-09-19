@@ -7,16 +7,11 @@ Exploring two classic collision-handling strategies: Chaining (linked lists) and
 The main goal is to serve as educational material for understanding hashing techniques, as well as a reusable base for academic projects requiring fast insertion, deletion, and search operations.
 
 **Contents**
-
-'int_chainingHash.h' – Integer Hash Table with Chaining
-
-'string_chainingHash.h' – String Hash Table with Chaining
-
-'int_openAddressingHash.h' – Integer Hash Table with Open Addressing (Linear Probing)
-
-'string_openAddressingHash.h' – String Hash Table with Open Addressing (Linear Probing)
-
-'main.cpp' – Example program to test all implementations
+- int_chainingHash.h – Integer Hash Table with Chaining
+- string_chainingHash.h – String Hash Table with Chaining
+- int_openAddressingHash.h – Integer Hash Table with Open Addressing (Linear Probing)
+- string_openAddressingHash.h – String Hash Table with Open Addressing (Linear Probing)
+- main.cpp – Example program to test all implementations
 
 **Features**
 - Two collision handling strategies:
