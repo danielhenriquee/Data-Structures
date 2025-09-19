@@ -1,5 +1,8 @@
 // Daniel Henrique da Silva
 
+#ifndef STRING_CHAININGHHASH_H
+#define STRING_CHAININGHHASH_H
+
 #include <iostream>
 #include <string>
 #include <stdexcept>
@@ -105,3 +108,5 @@ void chainingHash_clear(chainingNodeStr* table[]) {
         table[i] = nullptr; // Reset index to empty
     }
 }
+
+#endif
